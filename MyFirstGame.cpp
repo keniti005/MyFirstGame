@@ -69,6 +69,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 //  目的: ウィンドウ クラスを登録します。
 //
 
+//Windowクラスの仕組み
+//WNDCLASSEXW構造体
+//メンバ
 //・cbSize：構造体のサイズ（バイト単位）。このメンバーをsizeof(WNDCLASSEX)に設定する。GetClassInfoEx関数を呼び出す前に必ず設定をする
 //・style：クラススタイルの任意の組み合わせにすることができる
 //・lpfnWndProc：ウィンドウプロシージャへのポインター。呼び出すには、CallWindowProc関数を使用する必要がある
@@ -95,12 +98,14 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.cbClsExtra     = 0;
     wcex.cbWndExtra     = 0;
     wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_MYFIRSTGAME));
+    //wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_MYFIRSTGAME));
+    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APPLICATION));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
+    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOWTEXT +1);
     wcex.lpszMenuName   = NULL;
     wcex.lpszClassName  = szWindowClass;
-    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+    //wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_APPLICATION));
 
     return RegisterClassExW(&wcex);
 }
@@ -217,3 +222,10 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 //lpParam：WM_CREATEメッセージのlParamパラメーターが指す
 //・戻り値
 //作成したウィンドウへのバンドルを返す（失敗した場合NULLを返す）
+
+//メッセージループとコールバックの関係と仕組み
+//仕組み
+//・メッセージループ：アプリケーションがイベントを処理するためのループ。アプリケーションを常にイベントを監視し、それらに応答できるようにする
+//・コールバック：特定のイベントが発生したときに実行される関数。イベントが発生した際、関連付けられたコールバック関数を呼び出す
+//関係
+//・メッセージループでイベントを検出し、コールバック関数を呼び出すための仕組みを提供。コールバック関数は、メッセージループによってディスパッチされたイベントに対する実際の処理を担当
