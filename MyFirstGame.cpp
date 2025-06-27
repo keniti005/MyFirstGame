@@ -3,8 +3,18 @@
 
 #include "framework.h"
 #include "MyFirstGame.h"
+#include "Direct3D.h"
+
+HWND hWnd = nullptr;
+
+//今初期化しなくても後にWindows側で初期化する
 
 #define MAX_LOADSTRING 100
+
+//グローバル変数の宣言
+const wchar_t* WIN_CLASS_NAME = L"SAMPLE GAME WINDOW";//ウィンドウクラス名
+const int WINDOW_WIDTH = 800;  //ウィンドウの幅//SVGAサイズ
+const int WINDOW_HEIGHT = 600; //ウィンドウの高さ
 
 // グローバル変数:
 HINSTANCE hInst;                                // 現在のインターフェイス
@@ -33,10 +43,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     // TODO: ここにコードを挿入してください。
 
+    //szWindowClass = WIN_CLASS_NAME;
+
     // グローバル文字列を初期化する
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_MYFIRSTGAME, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
+
 
     // アプリケーション初期化の実行:
     if (!InitInstance (hInstance, nCmdShow))
@@ -44,21 +57,42 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
+    //Direct3D初期化
+    Direct3D::Initialize(winW, winH, hWnd);
+
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MYFIRSTGAME));
 
-    MSG msg;
+    MSG msg = {};
 
     // メイン メッセージ ループ:
-    while (GetMessage(&msg, nullptr, 0, 0))
+    //while (GetMessage(&msg, nullptr, 0, 0))
+    while (msg.message != WM_QUIT)
     {
-        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+        //if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+        //{
+        //    TranslateMessage(&msg);
+        //    DispatchMessage(&msg);
+        //}
+
+        //メッセージあり
+        if (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
         {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
+                TranslateMessage(&msg);
+                DispatchMessage(&msg);            
         }
+
+
+
+
+
+            Direct3D::BeginDraw;
+
+            Direct3D::EndDraw;
     }
 
-    return (int) msg.wParam;
+    //解放処理
+    Direct3D::Release();
+    return 0;
 }
 
 
@@ -101,7 +135,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     //wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_MYFIRSTGAME));
     wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APPLICATION));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOWTEXT +1);
+    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW +1);
     wcex.lpszMenuName   = NULL;
     wcex.lpszClassName  = szWindowClass;
     //wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
@@ -124,8 +158,14 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // グローバル変数にインスタンス ハンドルを格納する
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+   //ウィンドウサイズの計算
+   RECT winRect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
+   AdjustWindowRect(&winRect, WS_OVERLAPPEDWINDOW, FALSE);
+   int winW = winRect.right - winRect.left;     //ウィンドウ幅
+   int winH = winRect.bottom - winRect.top;     //ウィンドウ高さ
+
+   hWnd = CreateWindowW(szWindowClass, WIN_CLASS_NAME, WS_OVERLAPPEDWINDOW,
+      CW_USEDEFAULT, 0, winW,winH, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
    {
