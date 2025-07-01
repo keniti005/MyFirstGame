@@ -1,12 +1,52 @@
 #include "Direct3D.h"
+#include <d3dcompiler.h>
 
 namespace Direct3D
 {
-	ID3D11Device* pDevice;		                //デバイス
-	ID3D11DeviceContext* pContext;		        //デバイスコンテキスト
-	IDXGISwapChain* pSwapChain;		            //スワップチェイン
-	ID3D11RenderTargetView* pRenderTargetView;	//レンダーターゲットビュー
+	ID3D11Device* pDevice;		                    //デバイス
+	ID3D11DeviceContext* pContext;		            //デバイスコンテキスト
+	IDXGISwapChain* pSwapChain;		                //スワップチェイン
+	ID3D11RenderTargetView* pRenderTargetView;	    //レンダーターゲットビュー
 
+    ID3D11VertexShader* pVertexShader = nullptr;	//頂点シェーダー
+    ID3D11PixelShader* pPixelShader = nullptr;		//ピクセルシェーダー
+
+    ID3D11InputLayout* pVertexLayout = nullptr;	//頂点インプットレイアウト
+    ID3D11RasterizerState* pRasterizerState = nullptr;	//ラスタライザー
+}
+
+void Direct3D::InitShader()
+{
+    // 頂点シェーダの作成（コンパイル）
+    ID3DBlob* pCompileVS = nullptr;
+    D3DCompileFromFile(L"Simple3D.hlsl", nullptr, nullptr, "VS", "vs_5_1", NULL, 0, &pCompileVS, NULL);
+    pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, &pVertexShader);
+    pCompileVS->Release();
+
+    // ピクセルシェーダの作成（コンパイル）
+    ID3DBlob* pCompilePS = nullptr;
+    D3DCompileFromFile(L"Simple3D.hlsl", nullptr, nullptr, "PS", "ps_5_1", NULL, 0, &pCompilePS, NULL);
+    pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, &pPixelShader);
+    pCompilePS->Release();
+
+    //頂点インプットレイアウト
+    D3D11_INPUT_ELEMENT_DESC layout[] = {
+        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },	//位置
+    };
+    pDevice->CreateInputLayout(layout, 1, pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &pVertexLayout);
+
+    //ラスタライザ作成
+    D3D11_RASTERIZER_DESC rdc = {};
+    rdc.CullMode = D3D11_CULL_BACK;
+    rdc.FillMode = D3D11_FILL_SOLID;
+    rdc.FrontCounterClockwise = FALSE;
+    pDevice->CreateRasterizerState(&rdc, &pRasterizerState);
+
+    //それぞれをデバイスコンテキストにセット
+    pContext->VSSetShader(pVertexShader, NULL, 0);	//頂点シェーダー
+    pContext->PSSetShader(pPixelShader, NULL, 0);	//ピクセルシェーダー
+    pContext->IASetInputLayout(pVertexLayout);	//頂点インプットレイアウト
+    pContext->RSSetState(pRasterizerState);		//ラスタライザー}
 }
 
 void Direct3D::Initialize(int winW, int winH, HWND hWnd)
@@ -18,8 +58,8 @@ void Direct3D::Initialize(int winW, int winH, HWND hWnd)
     ZeroMemory(&scDesc, sizeof(scDesc));
 
     //描画先のフォーマット
-    scDesc.BufferDesc.Width = WINDOW_WIDTH;		//画面幅
-    scDesc.BufferDesc.Height = WINDOW_HEIGHT;	//画面高さ
+    scDesc.BufferDesc.Width = winW;		//画面幅
+    scDesc.BufferDesc.Height = winH;	//画面高さ
     scDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;	// 何色使えるか
 
     //FPS（1/60秒に1回）
@@ -65,8 +105,8 @@ void Direct3D::Initialize(int winW, int winH, HWND hWnd)
     ///////////////////////////ビューポート（描画範囲）設定///////////////////////////////
     //レンダリング結果を表示する範囲
     D3D11_VIEWPORT vp;
-    vp.Width = (float)WINDOW_WIDTH;	//幅
-    vp.Height = (float)WINDOW_HEIGHT;//高さ
+    vp.Width = (float)winW;	//幅
+    vp.Height = (float)winH;//高さ
     vp.MinDepth = 0.0f;	//手前
     vp.MaxDepth = 1.0f;	//奥
     vp.TopLeftX = 0;	//左
@@ -77,6 +117,8 @@ void Direct3D::Initialize(int winW, int winH, HWND hWnd)
     pContext->OMSetRenderTargets(1, &pRenderTargetView, nullptr);            // 描画先を設定
     pContext->RSSetViewports(1, &vp);
 
+    //シェーダー準備
+    InitShader();
 }
 
 void Direct3D::BeginDraw()
@@ -103,6 +145,11 @@ void Direct3D::EndDraw()
 
 void Direct3D::Release()
 {
+    pRasterizerState->Release();
+    pVertexLayout->Release();
+    pPixelShader->Release();
+    pVertexShader->Release();
+
     pDevice->Release();//デバイス
     pContext->Release();//デバイスコンテキスト
     pSwapChain->Release();//スワップチェイン

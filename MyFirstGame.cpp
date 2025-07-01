@@ -58,7 +58,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
     //Direct3D初期化
-    Direct3D::Initialize(winW, winH, hWnd);
+    Direct3D::Initialize(WINDOW_WIDTH, WINDOW_HEIGHT, hWnd);
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MYFIRSTGAME));
 
@@ -135,7 +135,8 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     //wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_MYFIRSTGAME));
     wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APPLICATION));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW +1);
+    //wcex.hbrBackground  = (HBRUSH)(COLOR_BACKGROUND +1);
+    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
     wcex.lpszMenuName   = NULL;
     wcex.lpszClassName  = szWindowClass;
     //wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
