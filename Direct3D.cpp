@@ -15,25 +15,41 @@ namespace Direct3D
     ID3D11RasterizerState* pRasterizerState = nullptr;	//ラスタライザー
 }
 
-void Direct3D::InitShader()
+HRESULT Direct3D::InitShader()
 {
+    HRESULT hr;
+
     // 頂点シェーダの作成（コンパイル）
     ID3DBlob* pCompileVS = nullptr;
-    D3DCompileFromFile(L"Simple3D.hlsl", nullptr, nullptr, "VS", "vs_5_1", NULL, 0, &pCompileVS, NULL);
-    pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, &pVertexShader);
-    pCompileVS->Release();
+    D3DCompileFromFile(L"Simple3D.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
+    hr = pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, &pVertexShader);
+    if (FAILED(hr))
+    {
+        return hr;
+    }
 
-    // ピクセルシェーダの作成（コンパイル）
-    ID3DBlob* pCompilePS = nullptr;
-    D3DCompileFromFile(L"Simple3D.hlsl", nullptr, nullptr, "PS", "ps_5_1", NULL, 0, &pCompilePS, NULL);
-    pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, &pPixelShader);
-    pCompilePS->Release();
-
-    //頂点インプットレイアウト
+        //頂点インプットレイアウト
     D3D11_INPUT_ELEMENT_DESC layout[] = {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },	//位置
     };
-    pDevice->CreateInputLayout(layout, 1, pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &pVertexLayout);
+    hr = pDevice->CreateInputLayout(layout, 1, pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &pVertexLayout);
+    if (FAILED(hr))
+    {
+        return hr;
+    }
+
+    // ピクセルシェーダの作成（コンパイル）
+    ID3DBlob* pCompilePS = nullptr;
+    D3DCompileFromFile(L"Simple3D.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
+    hr = pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, &pPixelShader);
+    if (FAILED(hr))
+    {
+        return hr;
+    }
+
+
+    pCompileVS->Release();
+    pCompilePS->Release();
 
     //ラスタライザ作成
     D3D11_RASTERIZER_DESC rdc = {};
@@ -46,11 +62,13 @@ void Direct3D::InitShader()
     pContext->VSSetShader(pVertexShader, NULL, 0);	//頂点シェーダー
     pContext->PSSetShader(pPixelShader, NULL, 0);	//ピクセルシェーダー
     pContext->IASetInputLayout(pVertexLayout);	//頂点インプットレイアウト
-    pContext->RSSetState(pRasterizerState);		//ラスタライザー}
+    pContext->RSSetState(pRasterizerState);		//ラスタライザー
+
 }
 
-void Direct3D::Initialize(int winW, int winH, HWND hWnd)
+HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 {
+    HRESULT hr;
     //Direct3Dの初期化
     //DXGI_ADAPTER_DESC scDesc = {};
     DXGI_SWAP_CHAIN_DESC scDesc = {};
@@ -118,22 +136,28 @@ void Direct3D::Initialize(int winW, int winH, HWND hWnd)
     pContext->RSSetViewports(1, &vp);
 
     //シェーダー準備
-    InitShader();
+    hr = InitShader();
+    if (FAILED(hr))
+    {
+        return hr;
+    }
+
+    return S_OK;
 }
 
 void Direct3D::BeginDraw()
-{
-
-    //ゲームの処理
-}
-
-void Direct3D::EndDraw()
 {
     //背景の色
     float clearColor[4] = { 0.0f, 0.5f, 0.5f, 1.0f };//R,G,B,A
 
     //画面をクリア
     pContext->ClearRenderTargetView(pRenderTargetView, clearColor);
+
+    //ゲームの処理
+}
+
+void Direct3D::EndDraw()
+{
 
 
     //描画処理
@@ -145,13 +169,13 @@ void Direct3D::EndDraw()
 
 void Direct3D::Release()
 {
-    pRasterizerState->Release();
-    pVertexLayout->Release();
-    pPixelShader->Release();
-    pVertexShader->Release();
+    SAFE_RELEASE(pRasterizerState);
+    SAFE_RELEASE(pVertexLayout);
+    SAFE_RELEASE(pPixelShader);
+    SAFE_RELEASE(pVertexShader);
 
-    pDevice->Release();//デバイス
-    pContext->Release();//デバイスコンテキスト
-    pSwapChain->Release();//スワップチェイン
-    pRenderTargetView->Release();//レンダーターゲットビュー
+    SAFE_RELEASE(pDevice);//デバイス
+    SAFE_RELEASE(pContext);//デバイスコンテキスト
+    SAFE_RELEASE(pSwapChain);//スワップチェイン
+    SAFE_RELEASE(pRenderTargetView);//レンダーターゲットビュー
 }

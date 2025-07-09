@@ -4,6 +4,7 @@
 #include "framework.h"
 #include "MyFirstGame.h"
 #include "Direct3D.h"
+#include "Quad.h"
 
 HWND hWnd = nullptr;
 
@@ -57,12 +58,25 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
+    HRESULT hr;
+
     //Direct3D初期化
-    Direct3D::Initialize(WINDOW_WIDTH, WINDOW_HEIGHT, hWnd);
+    hr = Direct3D::Initialize(WINDOW_WIDTH, WINDOW_HEIGHT, hWnd);
+    if (FAILED(hr))
+    {
+        PostQuitMessage(0);
+    }
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MYFIRSTGAME));
 
     MSG msg = {};
+
+    Quad* q = new Quad;
+    hr = q->Initialize();
+    if (FAILED(hr))
+    {
+        PostQuitMessage(0);
+    }
 
     // メイン メッセージ ループ:
     //while (GetMessage(&msg, nullptr, 0, 0))
@@ -82,15 +96,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
 
 
+            Direct3D::BeginDraw();
 
+            q->Draw();
 
-
-            Direct3D::BeginDraw;
-
-            Direct3D::EndDraw;
+            Direct3D::EndDraw();
     }
 
     //解放処理
+    SAFE_RELEASE(q);
     Direct3D::Release();
     return 0;
 }
