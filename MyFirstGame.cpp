@@ -5,6 +5,7 @@
 #include "MyFirstGame.h"
 #include "Direct3D.h"
 #include "Quad.h"
+#include "Camera.h"
 
 HWND hWnd = nullptr;
 
@@ -58,9 +59,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    HRESULT hr;
-
     //Direct3D初期化
+    HRESULT hr;
     hr = Direct3D::Initialize(WINDOW_WIDTH, WINDOW_HEIGHT, hWnd);
     if (FAILED(hr))
     {
@@ -71,7 +71,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     MSG msg = {};
 
-    Quad* q = new Quad;
+    Camera::Initialize();
+    
+    Quad* q = new Quad();
     hr = q->Initialize();
     if (FAILED(hr))
     {
@@ -95,16 +97,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 DispatchMessage(&msg);            
         }
 
+        Camera::Update();
 
-            Direct3D::BeginDraw();
+        Direct3D::BeginDraw();
 
-            q->Draw();
+            //描画処理
+            XMMATRIX mat = XMMatrixRotationY(XMConvertToRadians(45));
+            q->Draw(mat);
+            //q->Draw();
 
             Direct3D::EndDraw();
     }
 
     //解放処理
     SAFE_RELEASE(q);
+
     Direct3D::Release();
     return 0;
 }

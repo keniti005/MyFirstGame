@@ -15,7 +15,7 @@ public:
 	Quad();
 	~Quad();
 	HRESULT Initialize();
-	void Draw();
+	void Draw(XMMATRIX& worldMatrix);
 	void Release();
 	ID3D11Buffer* pVertexBuffer_;	//頂点バッファ
 	ID3D11Buffer* pIndexBuffer_;	//インデックスバッファ
