@@ -1,11 +1,16 @@
 #include "Quad.h"
 #include "Camera.h"
+#include "Texture.h"
 #include <DirectXMath.h>
 
 using namespace DirectX;
 
 //メンバはないためスルー
 Quad::Quad()
+	:pVertexBuffer_(nullptr),
+	pIndexBuffer_(nullptr),
+	pConstantBuffer_(nullptr),
+	pTexture_(nullptr)
 {
 }
 
@@ -16,17 +21,27 @@ Quad::~Quad()
 HRESULT Quad::Initialize()
 {
 	HRESULT hr;
-	XMFLOAT4 vertices[] =
+
+	VERTEX vertices[] =
 	{
-		{-1.0f,  1.0f, 0.0f, 0.0f},//左上
-		{ 1.0f,  1.0f, 0.0f, 0.0f},//右上
-		{ 1.0f, -1.0f, 0.0f, 0.0f},//右下
-		{-1.0f, -1.0f, 0.0f, 0.0f}//左下
+		//{-1.0f,  1.0f, 0.0f, 0.0f},//左上
+		//{ 1.0f,  1.0f, 0.0f, 0.0f},//右上
+		//{ 1.0f, -1.0f, 0.0f, 0.0f},//右下
+		//{-1.0f, -1.0f, 0.0f, 0.0f}//左下
+		//{ XMVectorSet(-1.0f,  1.0f, 0.0f, 0.0f),XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f) },   // 四角形の頂点（左上）
+		//{ XMVectorSet(1.0f,  1.0f, 0.0f, 0.0f),	XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f) },   // 四角形の頂点（右上）
+		//{ XMVectorSet(1.0f, -1.0f, 0.0f, 0.0f),	XMVectorSet(1.0f, 1.0f, 0.0f, 0.0f) },   // 四角形の頂点（右下）
+		//{ XMVectorSet(-1.0f, -1.0f, 0.0f, 0.0f),XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f) },   // 四角形の頂点（左下）
+		{{-1.0f,  1.0f, 0.0f, 0.0f},{0.0f, 0.0f, 0.0f, 0.0f}},//左上
+		{{ 1.0f,  1.0f, 0.0f, 0.0f},{1.0f, 0.0f, 0.0f, 0.0f}},//右上
+		{{ 1.0f, -1.0f, 0.0f, 0.0f},{1.0f, 1.0f, 0.0f, 0.0f}},//右下
+		{{-1.0f, -1.0f, 0.0f, 0.0f},{0.1f, 0.0f, 0.0f, 0.0f}}//左下
+
 	};
 	
 	// 頂点データ用バッファの設定
 	D3D11_BUFFER_DESC bd_vertex;
-	bd_vertex.ByteWidth = sizeof(vertices);
+	bd_vertex.ByteWidth = sizeof(VERTEX);
 	bd_vertex.Usage = D3D11_USAGE_DEFAULT;
 	bd_vertex.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd_vertex.CPUAccessFlags = 0;
@@ -77,6 +92,9 @@ HRESULT Quad::Initialize()
 		return hr;
 	}
 
+	pTexture_ = new Texture();
+	pTexture_->Load("dice.png");
+	return S_OK;
 }
 
 void Quad::Draw(XMMATRIX& worldMatrix)
