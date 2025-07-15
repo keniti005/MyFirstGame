@@ -6,6 +6,7 @@
 #include "Direct3D.h"
 #include "Quad.h"
 #include "Camera.h"
+#include "Dice.h"
 
 HWND hWnd = nullptr;
 
@@ -73,12 +74,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     Camera::Initialize();
     
-    Quad* q = new Quad();
-    hr = q->Initialize();
+    //Quad* q = new Quad();
+    //hr = q->Initialize();
+    //if (FAILED(hr))
+    //{
+    //    PostQuitMessage(0);
+    //}
+    Dice* dice = new Dice();
+    hr = dice->Initialize();
     if (FAILED(hr))
     {
         PostQuitMessage(0);
     }
+
 
     // メイン メッセージ ループ:
     //while (GetMessage(&msg, nullptr, 0, 0))
@@ -101,16 +109,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
         Direct3D::BeginDraw();
 
-            //描画処理
-            XMMATRIX mat = XMMatrixRotationY(XMConvertToRadians(45));
-            q->Draw(mat);
-            //q->Draw();
+        //描画処理
+        static float angle = 0.3f;
+        XMMATRIX mat = XMMatrixRotationY(XMConvertToRadians(angle));
+        angle += 0.1f;
+        dice->Draw(mat);
+        //q->Draw(mat);
 
-            Direct3D::EndDraw();
+        Direct3D::EndDraw();
     }
 
     //解放処理
-    SAFE_RELEASE(q);
+    //SAFE_RELEASE(q);
+    SAFE_RELEASE(dice);
 
     Direct3D::Release();
     return 0;
