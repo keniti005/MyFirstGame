@@ -14,6 +14,7 @@ struct VERTEX
 {
 	XMVECTOR pos;
 	XMVECTOR uv;
+	XMVECTOR normal;
 };
 
 class Texture;
