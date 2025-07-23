@@ -11,8 +11,8 @@ SamplerState g_sampler : register(s0); //サンプラー
 cbuffer global
 {
     float4x4 matWVP; // ワールド・ビュー・プロジェクションの合成行列
-    float4x4 matNormal;//ワールド行列
-    float4x4 matWorld;//ワールド行列
+    float4x4 matNormal; //ワールド行列
+    float4x4 matWorld; //ワールド行列
 };
 
 //───────────────────────────────────────
@@ -28,7 +28,7 @@ struct VS_OUT
 //───────────────────────────────────────
 // 頂点シェーダ
 //───────────────────────────────────────
-VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
+VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD)
 {
 	//ピクセルシェーダーへ渡す情報
     VS_OUT outData;
@@ -37,14 +37,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 	//スクリーン座標に変換し、ピクセルシェーダーへ
     outData.pos = mul(pos, matWVP);
     outData.uv = uv.xy;
-    
-    //シェーダー（影）の計算
-    normal = mul(normal, matNormal); //法線ベクトルをワールド・ビュー・プロジェクション行列で変換
-    normal = normalize(normal); //法線ベクトルを正規化=長さ1に)
-    normal.w = 0; //w成分は0にする
-    float4 light = float4(-1, 0.5, -0.7, 0);
-    light = normalize(light);
-    outData.color = dot(normal, light);
+    outData.color = float4(1, 1, 1, 1);//色は白
     
 	//まとめて出力
     return outData;

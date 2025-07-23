@@ -8,6 +8,8 @@ using namespace DirectX;
 struct CONSTANT_BUFFER
 {
 	DirectX::XMMATRIX matWVP;//world*view*projectionの行列
+	DirectX::XMMATRIX matNormal;//法線変換用の行列
+	DirectX::XMMATRIX matWorld;//ワールド行列
 };
 
 struct VERTEX
