@@ -4,9 +4,10 @@
 #include "framework.h"
 #include "MyFirstGame.h"
 #include "Direct3D.h"
-#include "Quad.h"
+//#include "Quad.h"
 #include "Camera.h"
-#include "Dice.h"
+//#include "Dice.h"
+#include "Sprite.h"
 
 HWND hWnd = nullptr;
 
@@ -74,18 +75,25 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     Camera::Initialize();
     
+    Sprite* s = new Sprite();
+    hr = s->Initialize();
+    if (FAILED(hr))
+    {
+        PostQuitMessage(0);
+    }
+
     //Quad* q = new Quad();
     //hr = q->Initialize();
     //if (FAILED(hr))
     //{
     //    PostQuitMessage(0);
     //}
-    Dice* dice = new Dice();
-    hr = dice->Initialize();
-    if (FAILED(hr))
-    {
-        PostQuitMessage(0);
-    }
+    //Dice* dice = new Dice();
+    //hr = dice->Initialize();
+    //if (FAILED(hr))
+    //{
+    //    PostQuitMessage(0);
+    //}
 
 
     // メイン メッセージ ループ:
@@ -110,18 +118,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         Direct3D::BeginDraw();
 
         //描画処理
-        static float angle = 0.3f;
-        XMMATRIX mat = XMMatrixRotationY(XMConvertToRadians(angle));
-        angle += 0.1f;
-        dice->Draw(mat);
+        //static float angle = 0.3f;
+        //XMMATRIX mat = XMMatrixRotationY(XMConvertToRadians(angle));
+        //angle += 0.1f;
+        //dice->Draw(mat);
         //q->Draw(mat);
+        XMMATRIX mat = XMMatrixIdentity();
+        s->Draw(mat);
 
         Direct3D::EndDraw();
     }
 
     //解放処理
     //SAFE_RELEASE(q);
-    SAFE_RELEASE(dice);
+    //SAFE_RELEASE(dice);
+    SAFE_RELEASE(s);
 
     Direct3D::Release();
     return 0;
