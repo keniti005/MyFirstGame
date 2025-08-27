@@ -3,7 +3,7 @@
 Transform::Transform()
 {
     position_ = XMFLOAT3(1.0f, 1.0f, 0.0f);
-    rotate_ = XMFLOAT3(0.0f, 0.0f,45.0f);
+    rotate_ = XMFLOAT3(0.0f, 0.0f,0.0f);
     scale_ = XMFLOAT3(0.5f, 0.5f, 0.5f);
 
     matTranslate_ = XMMatrixIdentity();
