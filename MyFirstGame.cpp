@@ -8,6 +8,7 @@
 #include "Camera.h"
 //#include "Dice.h"
 #include "Sprite.h"
+#include "Transform.h"
 
 HWND hWnd = nullptr;
 
@@ -82,6 +83,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         PostQuitMessage(0);
     }
 
+    Transform *transform = new Transform();
+
     //Quad* q = new Quad();
     //hr = q->Initialize();
     //if (FAILED(hr))
@@ -123,7 +126,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         //angle += 0.1f;
         //dice->Draw(mat);
         //q->Draw(mat);
-        XMMATRIX mat = XMMatrixIdentity();
+        transform->Calculation();
+        //XMMATRIX mat = XMMatrixIdentity();
+        XMMATRIX mat = transform->GetWorldMatrix();
         s->Draw(mat);
 
         Direct3D::EndDraw();

@@ -1,5 +1,5 @@
 #include "Sprite.h"
-
+#include "Transform.h"
 //#include "Camera.h"
 #include "Texture.h"
 
@@ -23,10 +23,10 @@ HRESULT Sprite::Initialize()
 	VERTEX vertices[] =
 	{
 		//{{position}, {uv}}
-		{{ -1.0f,  1.0f, 0.0f, 0.0f}, {0.0f,  0.0f}},//四角形の頂点（左上）
-		{{  1.0f,  1.0f, 0.0f, 0.0f}, {1.0f,  0.0f}},//四角形の頂点（右上）
-		{{  1.0f, -1.0f, 0.0f, 0.0f}, {1.0f,  1.0f}},//四角形の頂点（右下）
-		{{ -1.0f, -1.0f, 0.0f, 0.0f}, {0.0f,  1.0f}} //四角形の頂点（左下）
+		{{ -0.5f,  0.5f, 0.0f, 0.0f}, {0.0f,  0.0f}},//四角形の頂点（左上）
+		{{  0.5f,  0.5f, 0.0f, 0.0f}, {1.0f,  0.0f}},//四角形の頂点（右上）
+		{{  0.5f, -0.5f, 0.0f, 0.0f}, {1.0f,  1.0f}},//四角形の頂点（右下）
+		{{ -0.5f, -0.5f, 0.0f, 0.0f}, {0.0f,  1.0f}} //四角形の頂点（左下）
 	};
 
 	// 頂点データ用バッファの設定
@@ -82,8 +82,9 @@ HRESULT Sprite::Initialize()
 		return hr;
 	}
 
+	//ロードすれば画像表示ができる(ない場合は黒色)
 	pTexture_ = new Texture();
-	pTexture_->Load("dice.png");
+	//pTexture_->Load("dice.png");
 
 	return S_OK;
 }
@@ -92,7 +93,7 @@ void Sprite::Draw(XMMATRIX& worldMatrix)
 {
 	//2D表示では必要
 	Direct3D::SetShader(SHADER_TYPE::SHADER_2D);
-
+	Transform transform;
 	//コンスタントバッファに渡す情報
 	CONSTANT_BUFFER cb;
 	cb.matWorld = XMMatrixTranspose(worldMatrix);
