@@ -7,8 +7,9 @@
 //#include "Quad.h"
 #include "Camera.h"
 //#include "Dice.h"
-#include "Sprite.h"
+//#include "Sprite.h"
 #include "Transform.h"
+#include "Fbx.h"
 
 HWND hWnd = nullptr;
 
@@ -76,14 +77,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     Camera::Initialize();
     
-    Sprite* s = new Sprite();
-    hr = s->Initialize();
-    if (FAILED(hr))
-    {
-        PostQuitMessage(0);
-    }
+    //Sprite* s = new Sprite();
+    //hr = s->Initialize();
+    //if (FAILED(hr))
+    //{
+    //    PostQuitMessage(0);
+    //}
+    //Transform* transform = new Transform();
 
-    Transform *transform = new Transform();
+    Transform transform;
+    Fbx* fbx = new Fbx();
+    fbx->Load("Oden.fbx");
+
 
     //Quad* q = new Quad();
     //hr = q->Initialize();
@@ -125,11 +130,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         //XMMATRIX mat = XMMatrixRotationY(XMConvertToRadians(angle));
         //angle += 0.1f;
         //dice->Draw(mat);
-        //q->Draw(mat);
-        transform->Calculation();
+        //transform->Calculation();
         //XMMATRIX mat = XMMatrixIdentity();
-        XMMATRIX mat = transform->GetWorldMatrix();
-        s->Draw(mat);
+        //XMMATRIX mat = transform->GetWorldMatrix();
+        //q->Draw(mat);
+        //s->Draw(mat);
+        fbx->Draw(transform);
+
 
         Direct3D::EndDraw();
     }
@@ -137,7 +144,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     //解放処理
     //SAFE_RELEASE(q);
     //SAFE_RELEASE(dice);
-    SAFE_RELEASE(s);
+    //SAFE_RELEASE(s);
 
     Direct3D::Release();
     return 0;

@@ -2,9 +2,9 @@
 
 Transform::Transform()
 {
-    position_ = XMFLOAT3(1.0f, 1.0f, 0.0f);
+    position_ = XMFLOAT3(0.0f, 0.0f, 0.0f);
     rotate_ = XMFLOAT3(0.0f, 0.0f,0.0f);
-    scale_ = XMFLOAT3(0.5f, 0.5f, 0.5f);
+    scale_ = XMFLOAT3(1.0f, 1.0f, 1.0f);
 
     matTranslate_ = XMMatrixIdentity();
     matRotate_ = XMMatrixIdentity();
