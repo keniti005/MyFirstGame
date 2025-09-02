@@ -1,6 +1,9 @@
 #include "Fbx.h"
 #include "Direct3D.h"
 #include "Camera.h"
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 Fbx::Fbx()
 	:pVertexBuffer_(nullptr),
@@ -35,10 +38,12 @@ HRESULT Fbx::Load(std::string fileName)
 	//各情報の個数を取得
 	vertexCount_ = mesh->GetControlPointsCount();	//頂点の数
 	polygonCount_ = mesh->GetPolygonCount();	//ポリゴンの数
+	materialCount_ = pNode->GetMaterialCount(); //マテリアルの数
 	 
 	InitVertex(mesh);
 	InitIndex(mesh);
 	IntConstantBuffer();
+	InitMaterial(pNode);
 
 	//マネージャ解放
 	pFbxManager->Destroy();
@@ -54,6 +59,7 @@ void Fbx::Draw(Transform& transform)
 	CONSTANT_BUFFER cb;
 	cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 	cb.matNormal = XMMatrixIdentity();
+	//cb.matNormal = XMMatrixTranspose(transform.GetWorldMatrix());
 
 	D3D11_MAPPED_SUBRESOURCE pdata;
 	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
@@ -89,7 +95,7 @@ void Fbx::InitVertex(FbxMesh* mesh)
 {
 	VERTEX* vertices = new VERTEX[vertexCount_];
 	//全ポリゴン
-	for (DWORD poly = 0; poly < polygonCount_; poly++)//DWORDはlong long intでも可
+	for (long poly = 0; poly < polygonCount_; poly++)//DWORDはlong long intでも可
 	{
 		//3頂点分
 		for (int vertex = 0; vertex < 3; vertex++)
@@ -118,7 +124,7 @@ void Fbx::InitVertex(FbxMesh* mesh)
 	hr = Direct3D::pDevice->CreateBuffer(&bd_vertex, &data_vertex, &pVertexBuffer_);
 	if (FAILED(hr))
 	{
-		return ;
+		return;
 	}
 
 }
@@ -128,9 +134,9 @@ void Fbx::InitIndex(FbxMesh* mesh)
 	int* index = new int[polygonCount_ * 3];
 	int count = 0;
 
-	for (DWORD poly = 0; poly < polygonCount_; poly++)
+	for (long poly = 0; poly < polygonCount_; poly++)
 	{
-		for (DWORD vertex = 0; vertex < 3;vertex++)
+		for (long vertex = 0; vertex < 3;vertex++)
 		{
 			index[count] = mesh->GetPolygonVertex(poly, vertex);
 			count++;
@@ -138,7 +144,7 @@ void Fbx::InitIndex(FbxMesh* mesh)
 	}
 
 	// インデックスバッファを生成する
-	D3D11_BUFFER_DESC   bd;
+	D3D11_BUFFER_DESC bd;
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	bd.ByteWidth = sizeof(int) * polygonCount_ * 3;
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
@@ -175,5 +181,42 @@ void Fbx::IntConstantBuffer()
 	if (FAILED(hr))
 	{
 		return ;
+	}
+}
+
+void Fbx::InitMaterial(FbxNode* pNode)
+{
+	materialList_.resize(materialCount_);
+	for (int i = 0; i < materialCount_; i++)
+	{
+		//i番目のマテリアル情報を取得
+		FbxSurfaceMaterial* pMaterial = pNode->GetMaterial(i);
+
+		//テクスチャ情報
+		FbxProperty  lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sDiffuse);
+
+		//テクスチャの数数
+		int fileTextureCount = lProperty.GetSrcObjectCount<FbxFileTexture>();
+
+		if (fileTextureCount > 0)
+		{
+			FbxFileTexture* textureInfo = lProperty.GetSrcObject<FbxFileTexture>(0);
+			const char* textureFilePath = textureInfo->GetRelativeFileName();
+			fs::path tPath(textureFilePath);
+			if (fs::is_regular_file(tPath))
+			{
+				int a = 0;
+				a++;
+				//テクスチャ読み込み
+			}
+			else
+			{
+				//ファイルがないときエラー
+			}
+		}
+		else
+		{
+
+		}
 	}
 }

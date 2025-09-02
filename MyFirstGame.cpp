@@ -145,7 +145,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     //SAFE_RELEASE(q);
     //SAFE_RELEASE(dice);
     //SAFE_RELEASE(s);
-
+    SAFE_RELEASE(fbx);
     Direct3D::Release();
     return 0;
 }
