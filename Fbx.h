@@ -34,7 +34,7 @@ private:
 	int materialCount_; //マテリアルの個数
 
 	ID3D11Buffer* pVertexBuffer_;//頂点バッファ
-	ID3D11Buffer* pIndexBuffer_;//インデックスバッファ
+	ID3D11Buffer** pIndexBuffer_;//インデックスバッファ
 	ID3D11Buffer* pConstantBuffer_;//コンスタントバッファ
 	std::vector<MATERIAL> materialList_;
 public:

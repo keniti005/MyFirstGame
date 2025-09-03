@@ -87,7 +87,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     Transform transform;
     Fbx* fbx = new Fbx();
-    fbx->Load("Oden.fbx");
+    hr = fbx->Load("Oden.fbx");
+    if (FAILED(hr))
+    {
+        PostQuitMessage(0);
+    }
 
 
     //Quad* q = new Quad();
