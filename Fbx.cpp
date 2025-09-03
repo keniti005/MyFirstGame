@@ -2,6 +2,7 @@
 #include "Direct3D.h"
 #include "Camera.h"
 #include <filesystem>
+#include <string>
 
 namespace fs = std::filesystem;
 
@@ -16,8 +17,16 @@ Fbx::Fbx()
 
 HRESULT Fbx::Load(std::string fileName)
 {
-	HRESULT hr;
+	std::string subDir("Assets");
+	fs::path currPath, basePath;
+	currPath = fs::current_path();
+	basePath = currPath;
+	currPath = currPath / subDir;
+	//fs::path subPath(currPath.string() + "\\" + subDir);
+	assert(fs::exists(currPath));
+	fs::current_path(currPath);
 
+	HRESULT hr;
 	//マネージャを生成
 	FbxManager* pFbxManager = FbxManager::Create();
 
@@ -39,7 +48,7 @@ HRESULT Fbx::Load(std::string fileName)
 	vertexCount_ = mesh->GetControlPointsCount();	//頂点の数
 	polygonCount_ = mesh->GetPolygonCount();	//ポリゴンの数
 	materialCount_ = pNode->GetMaterialCount(); //マテリアルの数
-	 
+
 	InitVertex(mesh);
 	InitIndex(mesh);
 	IntConstantBuffer();
@@ -58,13 +67,23 @@ void Fbx::Draw(Transform& transform)
 
 	CONSTANT_BUFFER cb;
 	cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
-	cb.matNormal = XMMatrixIdentity();
+	cb.matNormal = transform.GetNomalMatrix();
 	//cb.matNormal = XMMatrixTranspose(transform.GetWorldMatrix());
 
-	D3D11_MAPPED_SUBRESOURCE pdata;
-	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
-	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// データを値を送る
-	Direct3D::pContext->Unmap(pConstantBuffer_, 0);	//再開
+	//for (int i = 0;i < materialCount_;i++)
+	//{
+	//	if (materialList_[i].pTexture)
+	//	{
+	//		cb.materiaFlag = TRUE;
+	//		cb.diffuse = XMFLOAT4(1, 1, 1, 1);
+	//	}
+	//	else
+	//	{
+	//		cb.materiaFlag = FALSE;
+	//		cb.diffuse = materialList_[i].diffuse;
+	//	}
+	//}
+
 
 
 
@@ -75,6 +94,24 @@ void Fbx::Draw(Transform& transform)
 
 	for (int i = 0; i < materialCount_; i++)
 	{
+
+		if (materialList_[i].pTexture)
+		{
+			cb.materiaFlag = TRUE;
+			cb.diffuse = XMFLOAT4(1, 1, 1, 1);
+		}
+		else
+		{
+			cb.materiaFlag = FALSE;
+			cb.diffuse = materialList_[i].diffuse;
+		}
+
+
+		D3D11_MAPPED_SUBRESOURCE pdata;
+		Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
+		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// データを値を送る
+		Direct3D::pContext->Unmap(pConstantBuffer_, 0);	//再開
+
 		// インデックスバッファーをセット
 		stride = sizeof(int);
 		offset = 0;
@@ -92,7 +129,7 @@ void Fbx::Draw(Transform& transform)
 			Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV);
 
 		}
-		Direct3D::pContext->DrawIndexed(polygonCount_ * 3, 0, 0);
+		Direct3D::pContext->DrawIndexed(indexCount_[i] * 3, 0, 0);
 	}
 }
 
@@ -125,6 +162,11 @@ void Fbx::InitVertex(FbxMesh* mesh)
 			int uvIndex = mesh->GetTextureUVIndex(poly, vertex, FbxLayerElement::eTextureDiffuse);
 			FbxVector2 uv = pUV->GetDirectArray().GetAt(uvIndex);
 			vertices[index].uv = XMVectorSet((float)uv.mData[0], (float)(1.0f - uv.mData[1]), 0.0f, 0.0f);
+
+			//頂点の準備
+			FbxVector4 normal;
+			mesh->GetPolygonVertexNormal(poly, vertex, normal);
+			vertices[index].normal = XMVectorSet((float)normal[0], (float)normal[1], (float)normal[2], 0.0f);
 		}
 	}
 
@@ -153,6 +195,7 @@ void Fbx::InitIndex(FbxMesh* mesh)
 	pIndexBuffer_ = new ID3D11Buffer* [materialCount_];
 
 	int* index = new int[polygonCount_ * 3];
+	indexCount_ = std::vector<int>(materialCount_);
 
 	for (int i = 0; i < materialCount_; i++)
 	{
@@ -224,7 +267,7 @@ void Fbx::InitMaterial(FbxNode* pNode)
 		FbxSurfaceMaterial* pMaterial = pNode->GetMaterial(i);
 
 		//テクスチャ情報
-		FbxProperty  lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sDiffuse);
+		FbxProperty lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sDiffuse);
 
 		//テクスチャの数数
 		int fileTextureCount = lProperty.GetSrcObjectCount<FbxFileTexture>();
@@ -252,6 +295,8 @@ void Fbx::InitMaterial(FbxNode* pNode)
 		{
 			//テクスチャがないときの処理
 			materialList_[i].pTexture = nullptr;
+			FbxDouble3 color = ((FbxSurfaceLambert*)pMaterial)->Diffuse.Get();
+			materialList_[i].diffuse = { (float)color[0],(float)color[1],(float)color[2],1.0f };
 
 		}
 	}

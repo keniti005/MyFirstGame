@@ -16,17 +16,21 @@ private:
 	struct MATERIAL
 	{
 		Texture* pTexture;
+		XMFLOAT4 diffuse;
 	};
 	struct CONSTANT_BUFFER
 	{
 		XMMATRIX	matWVP;//world*view*projection行列
 		XMMATRIX	matNormal;//法線変換用の行列
+		XMFLOAT4	diffuse;
+		BOOL		materiaFlag;//マテリアルがあるかないか
 	};
 
 	struct VERTEX
 	{
 		XMVECTOR position;
 		XMVECTOR uv;
+		XMVECTOR normal;
 	};
 
 	int vertexCount_;	//頂点数
@@ -37,6 +41,7 @@ private:
 	ID3D11Buffer** pIndexBuffer_;//インデックスバッファ
 	ID3D11Buffer* pConstantBuffer_;//コンスタントバッファ
 	std::vector<MATERIAL> materialList_;
+	std::vector<int> indexCount_;
 public:
 
 	Fbx();

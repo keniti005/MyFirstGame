@@ -85,7 +85,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     //}
     //Transform* transform = new Transform();
 
-    Transform transform;
     Fbx* fbx = new Fbx();
     hr = fbx->Load("Oden.fbx");
     if (FAILED(hr))
@@ -129,6 +128,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
         Direct3D::BeginDraw();
 
+        static Transform transform;
+        transform.rotate_.y += 0.1f;
         //描画処理
         //static float angle = 0.3f;
         //XMMATRIX mat = XMMatrixRotationY(XMConvertToRadians(angle));
