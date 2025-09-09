@@ -129,7 +129,7 @@ void Fbx::Draw(Transform& transform)
 			Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV);
 
 		}
-		Direct3D::pContext->DrawIndexed(indexCount_[i] * 3, 0, 0);
+		Direct3D::pContext->DrawIndexed(indexCount_[i], 0, 0);
 	}
 }
 
@@ -217,6 +217,8 @@ void Fbx::InitIndex(FbxMesh* mesh)
 			}
 		}
 
+		indexCount_[i] = count;
+
 		// インデックスバッファを生成する
 		D3D11_BUFFER_DESC bd;
 		bd.Usage = D3D11_USAGE_DEFAULT;
@@ -288,7 +290,7 @@ void Fbx::InitMaterial(FbxNode* pNode)
 			else
 			{
 				//テクスチャファイルがないときエラー
-				return;
+				
 			}
 		}
 		else
