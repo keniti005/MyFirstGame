@@ -10,6 +10,7 @@
 //#include "Sprite.h"
 #include "Transform.h"
 #include "Fbx.h"
+#include "Input.h"
 
 HWND hWnd = nullptr;
 
@@ -71,6 +72,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         PostQuitMessage(0);
     }
 
+    //DirectInputの初期化
+    Input::Initialize(hWnd);
+
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MYFIRSTGAME));
 
     MSG msg = {};
@@ -125,6 +129,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
 
         Camera::Update();
+        Input::Update();
 
         Direct3D::BeginDraw();
 
@@ -141,7 +146,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         //q->Draw(mat);
         //s->Draw(mat);
         fbx->Draw(transform);
-
+        
+        if (Input::IsKey(DIK_ESCAPE))
+        {
+            PostQuitMessage(0);
+        }
 
         Direct3D::EndDraw();
     }
@@ -151,6 +160,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     //SAFE_RELEASE(dice);
     //SAFE_RELEASE(s);
     SAFE_RELEASE(fbx);
+    Input::Release();
     Direct3D::Release();
     return 0;
 }
@@ -214,7 +224,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //
 //        この関数で、グローバル変数でインスタンス ハンドルを保存し、
 //        メイン プログラム ウィンドウを作成および表示します。
-//
+//   hWnd - 実行されているウィンドウの種類と設定、実行されたウィンドウを識別するための変数
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // グローバル変数にインスタンス ハンドルを格納する
@@ -247,8 +257,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_COMMAND  - アプリケーション メニューの処理
 //  WM_PAINT    - メイン ウィンドウを描画する
 //  WM_DESTROY  - 中止メッセージを表示して戻る
-//
-//
+//  wndProc     - ウィンドウが何かの動作した時、windowsに通知をしてディスプレイに実行結果を表示させる
+//  nessage     - 何の動作をした時の識別番号
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
