@@ -110,8 +110,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         Direct3D::BeginDraw();
 
         //描画処理
-        static float angle = 0.3f;
-        XMMATRIX mat = XMMatrixRotationY(XMConvertToRadians(angle));
+        static float angle = 0.5f;
+        XMMATRIX mat = XMMatrixRotationY(XMConvertToRadians(angle)) * XMMatrixRotationZ(XMConvertToRadians(angle));
         angle += 0.1f;
         dice->Draw(mat);
         //q->Draw(mat);
