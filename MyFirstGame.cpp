@@ -152,9 +152,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             PostQuitMessage(0);
         }
 
+        if (Input::IsMouseButtonDown(0))
+        {
+            PostQuitMessage(0);
+        }
         Direct3D::EndDraw();
     }
-
+    
     //解放処理
     //SAFE_RELEASE(q);
     //SAFE_RELEASE(dice);
