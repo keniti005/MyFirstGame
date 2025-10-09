@@ -4,13 +4,10 @@
 #include "framework.h"
 #include "main.h"
 #include "Engine/Direct3D.h"
-//#include "Quad.h"
 #include "Engine/Camera.h"
-//#include "Dice.h"
-//#include "Sprite.h"
 #include "Engine/Transform.h"
-#include "Engine/Fbx.h"
 #include "Engine/Input.h"
+#include "Engine/RootJob.h"
 
 HWND hWnd = nullptr;
 
@@ -22,6 +19,8 @@ HWND hWnd = nullptr;
 const wchar_t* WIN_CLASS_NAME = L"SAMPLE GAME WINDOW";//ウィンドウクラス名
 const int WINDOW_WIDTH = 800;  //ウィンドウの幅//SVGAサイズ
 const int WINDOW_HEIGHT = 600; //ウィンドウの高さ
+
+RootJob* pRootJob = nullptr;
 
 // グローバル変数:
 HINSTANCE hInst;                                // 現在のインターフェイス
@@ -79,48 +78,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     MSG msg = {};
 
+    pRootJob = new RootJob(nullptr);
+    pRootJob->Initialize();
     Camera::Initialize();
-    
-    //Sprite* s = new Sprite();
-    //hr = s->Initialize();
-    //if (FAILED(hr))
-    //{
-    //    PostQuitMessage(0);
-    //}
-    //Transform* transform = new Transform();
-
-    Fbx* fbx = new Fbx();
-    hr = fbx->Load("Oden.fbx");
-    if (FAILED(hr))
-    {
-        PostQuitMessage(0);
-    }
-
-
-    //Quad* q = new Quad();
-    //hr = q->Initialize();
-    //if (FAILED(hr))
-    //{
-    //    PostQuitMessage(0);
-    //}
-    //Dice* dice = new Dice();
-    //hr = dice->Initialize();
-    //if (FAILED(hr))
-    //{
-    //    PostQuitMessage(0);
-    //}
-
 
     // メイン メッセージ ループ:
-    //while (GetMessage(&msg, nullptr, 0, 0))
     while (msg.message != WM_QUIT)
     {
-        //if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-        //{
-        //    TranslateMessage(&msg);
-        //    DispatchMessage(&msg);
-        //}
-
         //メッセージあり
         if (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
         {
@@ -131,39 +95,23 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         Camera::Update();
         Input::Update();
 
-        Direct3D::BeginDraw();
+        pRootJob->Update();
 
-        static Transform transform;
-        transform.rotate_.y += 0.1f;
-        //描画処理
-        //static float angle = 0.3f;
-        //XMMATRIX mat = XMMatrixRotationY(XMConvertToRadians(angle));
-        //angle += 0.1f;
-        //dice->Draw(mat);
-        //transform->Calculation();
-        //XMMATRIX mat = XMMatrixIdentity();
-        //XMMATRIX mat = transform->GetWorldMatrix();
-        //q->Draw(mat);
-        //s->Draw(mat);
-        fbx->Draw(transform);
-        
         if (Input::IsKeyDown(DIK_ESCAPE))
         {
             PostQuitMessage(0);
         }
 
-        if (Input::IsMouseButtonDown(0))
-        {
-            PostQuitMessage(0);
-        }
+        Direct3D::BeginDraw();
+
+        //描画処理
+        
+        //pRootJobから、すべてのオブジェクトの描画をする
         Direct3D::EndDraw();
     }
     
     //解放処理
-    //SAFE_RELEASE(q);
-    //SAFE_RELEASE(dice);
-    //SAFE_RELEASE(s);
-    SAFE_RELEASE(fbx);
+    pRootJob->Release();
     Input::Release();
     Direct3D::Release();
     return 0;
