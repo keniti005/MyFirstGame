@@ -81,7 +81,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     pRootJob = new RootJob(nullptr);
     pRootJob->Initialize();
     Camera::Initialize();
-
+    
     // メイン メッセージ ループ:
     while (msg.message != WM_QUIT)
     {
@@ -91,6 +91,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 TranslateMessage(&msg);
                 DispatchMessage(&msg);            
         }
+
+
 
         Camera::Update();
         Input::Update();
@@ -107,6 +109,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         //描画処理
         
         //pRootJobから、すべてのオブジェクトの描画をする
+        pRootJob->DrawSub();
+
         Direct3D::EndDraw();
     }
     

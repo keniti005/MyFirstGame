@@ -28,7 +28,7 @@ namespace Input
 
 	void Update()
 	{
-		_memccpy(prevKeyState, keyState, sizeof(keyState), 256);
+		memcpy(prevKeyState, keyState, sizeof(keyState));
 		for (int i = 0;i < 256;i++)
 		{
 			prevKeyState[i] = keyState[i];
@@ -38,7 +38,7 @@ namespace Input
 
 		//ƒ}ƒEƒX‚Ìó‘Ô‚ð•Û‘¶
 		pMouseDevice->Acquire();
-		_memccpy(&prevMouseState, &mouseState, sizeof(mouseState), 256);
+		memcpy(&prevMouseState, &mouseState, sizeof(mouseState));
 		pMouseDevice->GetDeviceState(sizeof(mouseState), &mouseState);
 	}
 	bool IsKey(int keyCode)

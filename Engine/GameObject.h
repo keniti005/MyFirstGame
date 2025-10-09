@@ -6,11 +6,6 @@
 
 class GameObject
 {
-	std::list<GameObject*> childList_;
-	Transform	transform_;
-	GameObject*	pParent_;
-	std::string	objectName_;
-
 public:
 	GameObject();
 	GameObject(GameObject* parent, const std::string& name);
@@ -20,4 +15,10 @@ public:
 	virtual void Update() = 0;
 	virtual void Draw() = 0;
 	virtual void Release() = 0;
+	void DrawSub();
+protected:
+	std::list<GameObject*> childList_;
+	Transform	transform_;
+	GameObject* pParent_;
+	std::string	objectName_;
 };

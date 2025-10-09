@@ -14,6 +14,11 @@ GameObject::~GameObject()
 {
 }
 
-void GameObject::Initialize()
+void GameObject::DrawSub()
 {
+	Draw();
+	for (auto itr : childList_)
+	{
+		itr->DrawSub();
+	}
 }
