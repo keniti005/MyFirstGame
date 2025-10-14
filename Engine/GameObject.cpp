@@ -22,3 +22,12 @@ void GameObject::DrawSub()
 		itr->DrawSub();
 	}
 }
+
+void GameObject::UpdateSub()
+{
+	Update();
+	for (auto itr : childList_)
+	{
+		itr->UpdateSub();
+	}
+}
