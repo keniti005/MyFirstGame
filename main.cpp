@@ -139,7 +139,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
     
     //解放処理
-    pRootJob->Release();
+    pRootJob->ReleaseSub();
     Input::Release();
     Direct3D::Release();
     return 0;

@@ -54,6 +54,8 @@ HRESULT Fbx::Load(std::string fileName)
 	IntConstantBuffer();
 	InitMaterial(pNode);
 
+	fs::current_path(basePath);
+
 	//マネージャ解放
 	pFbxManager->Destroy();
 	return S_OK;

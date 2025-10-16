@@ -17,16 +17,25 @@ public:
 	virtual void Release() = 0;
 	void DrawSub();
 	void UpdateSub();
+	void ReleaseSub();
+
+	void SetPostion(XMFLOAT3 position);
+	void SetPostion(float x, float y, float z);
+	void KillMe();
+
 	template<class T>
-	void Instantiate(GameObject* parent)
+	GameObject* Instantiate(GameObject* parent)
 	{
 		T* obj = new T(parent);
 		obj->Initialize();
 		childList_.push_back(obj);
+		return obj;
 	}
 protected:
 	std::list<GameObject*> childList_;
 	Transform	transform_;
 	GameObject* pParent_;
 	std::string	objectName_;
+private:
+	bool isDead_;
 };

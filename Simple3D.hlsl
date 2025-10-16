@@ -44,7 +44,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
     normal = mul(normal, matNormal); //法線ベクトルをワールド・ビュー・プロジェクション行列で変換
     normal = normalize(normal); //法線ベクトルを正規化=長さ1に)
     normal.w = 0; //w成分は0にする
-    float4 light = float4(0.2, -0.5, -0.7, 0);
+    float4 light = float4(0.2,0.5,-0.7, 0.0);
     light = normalize(light);
     light.w = 0;
     outData.color = clamp(dot(normal, light), 0, 1);

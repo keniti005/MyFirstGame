@@ -9,6 +9,7 @@ Transform::Transform()
     matTranslate_ = XMMatrixIdentity();
     matRotate_ = XMMatrixIdentity();
     matScale_ = XMMatrixIdentity();
+    pParent_ = nullptr;
 }
 
 Transform::~Transform()
@@ -30,7 +31,14 @@ void Transform::Calculation()
 
 XMMATRIX Transform::GetWorldMatrix()
 {
-    return matTranslate_ * matRotate_ * matScale_;
+    if (pParent_)
+    {
+        return matScale_ * matRotate_ * matTranslate_ * pParent_->GetWorldMatrix();
+    }
+    else
+    {
+        return matTranslate_ * matRotate_ * matScale_;
+    }
 }
 
 XMMATRIX Transform::GetNomalMatrix()
