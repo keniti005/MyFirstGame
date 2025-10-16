@@ -9,6 +9,8 @@
 #include "Engine/Input.h"
 #include "Engine/RootJob.h"
 
+#pragma comment(lib, "winmm.lib")
+
 HWND hWnd = nullptr;
 
 //今初期化しなくても後にWindows側で初期化する
@@ -91,8 +93,32 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 TranslateMessage(&msg);
                 DispatchMessage(&msg);            
         }
+        
+        timeBeginPeriod(1);
+        static DWORD countFps = 0;//FPS計測用カウンタ
+        static DWORD startTime = timeGetTime();//初回時間を保存
+        DWORD nowTime = timeGetTime();//現在の時間を取得
+        static DWORD lastUpdateTime = nowTime;
+
+        if (nowTime - startTime >= 1000)
+        {
+            std::string str = "FPS:" + std::to_string(nowTime - startTime) + ", " + std::to_string(countFps);
+            SetWindowTextA(hWnd, str.c_str());
+            countFps = 0;
+            startTime = nowTime;
+        }
+
+        if (nowTime - lastUpdateTime <= 1000.0f / 60)
+        {
+            continue;
+        }
+        lastUpdateTime = nowTime;
 
 
+        countFps++;
+        //startTime = nowTime;
+
+        timeEndPeriod(1);
 
         Camera::Update();
         Input::Update();
@@ -105,8 +131,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
 
         Direct3D::BeginDraw();
-
-        //描画処理
         
         //pRootJobから、すべてのオブジェクトの描画をする
         pRootJob->DrawSub();
