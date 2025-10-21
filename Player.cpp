@@ -1,10 +1,13 @@
 #include "Player.h"
 #include "Engine/Fbx.h"
 #include "ChildOden.h"
+#include "Engine/Model.h"
 
 Player::Player(GameObject* parent)
 	:GameObject(parent,"Player"),pFbx_(nullptr)
 {
+	pFbx_ = new Fbx;
+	pFbx_->Load("Oden.fbx");
 }
 
 Player::~Player()
@@ -13,11 +16,11 @@ Player::~Player()
 
 void Player::Initialize()
 {
-	pFbx_ = new Fbx;
-	pFbx_->Load("Oden.fbx");
 	transform_.scale_.x = 0.7f;
 	transform_.scale_.y = 0.7f;
 	transform_.scale_.z = 0.7f;
+	hModel_ = Model::Load("oden.fbx");
+	assert(hModel_ >= 0);
 	pRChildOden_ = (ChildOden*)Instantiate<ChildOden>(this);
 	pLChildOden_ = (ChildOden*)Instantiate<ChildOden>(this);
 	pRChildOden_->SetPostion(2.0f, 1.0f, 0.0f);
@@ -35,18 +38,21 @@ void Player::Update()
 
 void Player::Draw()
 {
-	if (pFbx_)
-	{
-		pFbx_->Draw(transform_);
-	}
+	//if (pFbx_)
+	//{
+	//	pFbx_->Draw(transform_);
+	//}
+	Model::SetTransform(hModel_, transform_);
+	Model::Draw(hModel_);
 }
 
 void Player::Release()
 {
-	if (pFbx_)
-	{
-		pFbx_->Release();
-		delete pFbx_;
-		pFbx_ = nullptr;
-	}
+	//if (pFbx_)
+	//{
+	//	pFbx_->Release();
+	//	delete pFbx_;
+	//	pFbx_ = nullptr;
+	//}
+	Model::Release();
 }
