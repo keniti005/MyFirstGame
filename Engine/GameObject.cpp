@@ -29,6 +29,7 @@ void GameObject::DrawSub()
 
 void GameObject::UpdateSub()
 {
+	transform_.Calculation();
 	Update();
 	for (auto itr : childList_)
 	{
