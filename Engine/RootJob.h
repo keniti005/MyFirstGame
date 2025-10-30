@@ -2,7 +2,8 @@
 
 #include "GameObject.h"
 
-class RootJob : public GameObject
+class RootJob : 
+	public GameObject
 {
 public:
 	RootJob(GameObject* parent);

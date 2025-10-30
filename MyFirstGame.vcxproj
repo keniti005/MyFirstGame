@@ -145,6 +145,7 @@
     <ClInclude Include="Engine\GameObject.h" />
     <ClInclude Include="Engine\Model.h" />
     <ClInclude Include="Engine\RootJob.h" />
+    <ClInclude Include="Engine\SceneManeger.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Engine\Input.h" />
     <ClInclude Include="main.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Engine\Texture.h" />
     <ClInclude Include="Engine\Transform.h" />
+    <ClInclude Include="TestScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChildOden.cpp" />
@@ -166,6 +168,7 @@
     <ClCompile Include="Engine\Input.cpp" />
     <ClCompile Include="Engine\Model.cpp" />
     <ClCompile Include="Engine\RootJob.cpp" />
+    <ClCompile Include="Engine\SceneManeger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Quad.cpp" />
     <ClCompile Include="Engine\Sprite.cpp" />
@@ -173,6 +176,7 @@
     <ClCompile Include="Engine\Transform.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayScene.cpp" />
+    <ClCompile Include="TestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MyFirstGame.rc" />
