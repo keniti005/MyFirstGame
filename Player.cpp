@@ -6,8 +6,6 @@
 Player::Player(GameObject* parent)
 	:GameObject(parent,"Player"),pFbx_(nullptr)
 {
-	pFbx_ = new Fbx;
-	pFbx_->Load("Oden.fbx");
 }
 
 Player::~Player()
