@@ -1,4 +1,6 @@
 #include "GameObject.h"
+#include "SphereCollider.h"
+#include <Windows.h>
 
 GameObject::GameObject()
 	:pParent_(nullptr)
@@ -31,6 +33,8 @@ void GameObject::UpdateSub()
 {
 	transform_.Calculation();
 	Update();
+
+	RoundRobin(GetRootJob());
 	for (auto itr : childList_)
 	{
 		itr->UpdateSub();
@@ -114,4 +118,45 @@ GameObject* GameObject::FindObjectByName(const std::string& name)
 	GameObject* rootJob = GetRootJob();
 	GameObject* result = rootJob->FindChildObject(name);
 	return result;
+}
+
+void GameObject::AddCollider(SphereCollider* pCollider)
+{
+	pCollider_ = pCollider;
+
+}
+
+void GameObject::Collision(GameObject* pTarget)
+{
+	float thisR = this->pCollider_->GetRadius();
+	float tgtR = pTarget->pCollider_->GetRadius();
+	float thre = (thisR - tgtR) * (thisR - tgtR);
+	
+	XMFLOAT3 thisP = this->transform_.position_;
+	XMFLOAT3 tgtP = pTarget->transform_.position_;
+	float dist = (thisP.x - tgtP.x) * (thisP.x - tgtP.x) +
+				 (thisP.y - tgtP.y) * (thisP.y - tgtP.y) +
+				 (thisP.z - tgtP.z) * (thisP.z - tgtP.z);
+	if (dist <= thre)
+	{
+		MessageBoxA(0, "ぶつかった", "Collider", MB_OK);
+	}
+}
+
+void GameObject::RoundRobin(GameObject* pTarget)
+{
+	//自分にコライダーがなかったらreturn
+	if (pCollider_ == nullptr)
+	{
+		return;
+	}
+	//自分とターゲット自体のコライダーの当たり判定
+	if (pTarget->pCollider_ != nullptr)
+	{
+		Collision(pTarget);
+	}
+	for (auto itr : pTarget->childList_)
+	{
+		RoundRobin(itr);
+	}
 }
