@@ -1,7 +1,6 @@
 #include "SphereCollider.h"
 
 SphereCollider::SphereCollider(float redius)
-	:radius_(radius_)
+	:radius_(redius)
 {
-
 }

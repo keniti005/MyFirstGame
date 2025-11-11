@@ -123,14 +123,13 @@ GameObject* GameObject::FindObjectByName(const std::string& name)
 void GameObject::AddCollider(SphereCollider* pCollider)
 {
 	pCollider_ = pCollider;
-
 }
 
 void GameObject::Collision(GameObject* pTarget)
 {
 	float thisR = this->pCollider_->GetRadius();
 	float tgtR = pTarget->pCollider_->GetRadius();
-	float thre = (thisR - tgtR) * (thisR - tgtR);
+	float thre = (thisR + tgtR) * (thisR + tgtR);
 	
 	XMFLOAT3 thisP = this->transform_.position_;
 	XMFLOAT3 tgtP = pTarget->transform_.position_;
@@ -139,9 +138,11 @@ void GameObject::Collision(GameObject* pTarget)
 				 (thisP.z - tgtP.z) * (thisP.z - tgtP.z);
 	if (dist <= thre)
 	{
-		MessageBoxA(0, "ぶつかった", "Collider", MB_OK);
+		//MessageBoxA(0, "ぶつかった", "Collider", MB_OK);
+  		int a = 0;
+		a++;
 	}
-}
+ }
 
 void GameObject::RoundRobin(GameObject* pTarget)
 {
@@ -151,7 +152,7 @@ void GameObject::RoundRobin(GameObject* pTarget)
 		return;
 	}
 	//自分とターゲット自体のコライダーの当たり判定
-	if (pTarget->pCollider_ != nullptr)
+	if (pTarget->pCollider_ != nullptr && pTarget->pCollider_ != pCollider_)
 	{
 		Collision(pTarget);
 	}
