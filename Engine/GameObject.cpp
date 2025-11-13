@@ -139,8 +139,7 @@ void GameObject::Collision(GameObject* pTarget)
 	if (dist <= thre)
 	{
 		//MessageBoxA(0, "‚Ô‚Â‚©‚Á‚½", "Collider", MB_OK);
-  		int a = 0;
-		a++;
+		onCollision(pTarget);
 	}
  }
 
@@ -160,4 +159,9 @@ void GameObject::RoundRobin(GameObject* pTarget)
 	{
 		RoundRobin(itr);
 	}
+}
+
+std::string GameObject::GetObjectName()
+{
+	return objectName_;
 }

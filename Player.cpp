@@ -4,6 +4,7 @@
 #include "Engine/Model.h"
 #include "Engine/SphereCollider.h"
 #include "Engine/Input.h"
+#include "Bullet.h"
 
 Player::Player(GameObject* parent)
 	:GameObject(parent,"Player"),pFbx_(nullptr)
@@ -35,10 +36,24 @@ void Player::Initialize()
 void Player::Update()
 {
 	transform_.rotate_.y += 0.5f;
-	if (Input::IsKey(DIK_SPACE))
+	if (Input::IsKeyDown(DIK_SPACE))
+	{
+		GameObject* pBullet = Instantiate<Bullet>(pParent_);
+		pBullet->SetPostion(transform_.position_);
+	}
+	if (Input::IsKey(DIK_D))
+	{
+		transform_.position_.x += 0.2f;
+	}
+	if (Input::IsKey(DIK_A))
+	{
+		transform_.position_.x -= 0.2f;
+	}
+	if (Input::IsKey(DIK_W))
 	{
 		transform_.position_.z += 0.2f;
 	}
+
 	//if (transform_.rotate_.y >= 720.0f)
 	//{
 	//	KillMe();
@@ -68,4 +83,8 @@ void Player::Release()
 
 void Player::onCollision(GameObject* pTarget)
 {
+	if (pTarget->GetObjectName() == "Enemy")
+	{
+		KillMe();
+	}
 }

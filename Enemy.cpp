@@ -36,4 +36,8 @@ void Enemy::Release()
 
 void Enemy::onCollision(GameObject* pTarget)
 {
+	if (pTarget->GetObjectName() == "Bullet")
+	{
+		KillMe();
+	}
 }
