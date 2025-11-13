@@ -20,7 +20,9 @@ void Player::Initialize()
 	transform_.scale_.y = 0.7f;
 	transform_.scale_.z = 0.7f;
 	//hModel_ = Model::Load("oden.fbx");
-	//hModel_ = Model::Load("golfClub.fbx");
+	//hModel_ = Model::Load("ironClub.fbx");
+	//hModel_ = Model::Load("woodenClub.fbx");
+	//hModel_ = Model::Load("smallClub.fbx");
 	hModel_ = Model::Load("bollPlayer.fbx");
 	assert(hModel_ >= 0);
 	pRChildOden_ = (ChildOden*)Instantiate<ChildOden>(this);
