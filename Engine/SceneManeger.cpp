@@ -1,6 +1,7 @@
 #include "SceneManeger.h"
 #include "../PlayScene.h"
 #include "../TestScene.h"
+#include "../GameOverScene.h"
 #include "Direct3D.h"
 
 SceneManeger::SceneManeger(GameObject* parent)
@@ -38,6 +39,8 @@ void SceneManeger::Update()
 		case SCENE_ID_TEST:
 			Instantiate<TestScene>(this);
 			break;
+		case SCENE_ID_GAMEOVER:
+			Instantiate<GameOverScene>(this);
 		}
 		currentSceneID_ = nextSceneID_;
 	}

@@ -150,6 +150,7 @@
     <ClInclude Include="Engine\SceneManeger.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Engine\Input.h" />
+    <ClInclude Include="GameOverScene.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Engine\Quad.h" />
     <ClInclude Include="Player.h" />
@@ -174,6 +175,7 @@
     <ClCompile Include="Engine\Model.cpp" />
     <ClCompile Include="Engine\RootJob.cpp" />
     <ClCompile Include="Engine\SceneManeger.cpp" />
+    <ClCompile Include="GameOverScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Quad.cpp" />
     <ClCompile Include="Engine\Sprite.cpp" />
