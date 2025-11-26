@@ -5,6 +5,7 @@
 #include "Engine/SphereCollider.h"
 #include "Engine/Input.h"
 #include "Bullet.h"
+#include "Engine/SceneManeger.h"
 
 Player::Player(GameObject* parent)
 	:GameObject(parent,"Player"),pFbx_(nullptr)
@@ -86,5 +87,7 @@ void Player::onCollision(GameObject* pTarget)
 	if (pTarget->GetObjectName() == "Enemy")
 	{
 		KillMe();
+		SceneManeger* pSceneManeger = (SceneManeger*)FindObjectByName("SceneManeger");
+		pSceneManeger->ChangeScene(SCENE_ID_GAMEOVER);
 	}
 }

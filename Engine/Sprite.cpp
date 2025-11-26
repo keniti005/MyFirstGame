@@ -84,7 +84,6 @@ HRESULT Sprite::Initialize()
 
 	//ロードすれば画像表示ができる(ない場合は黒色)
 	pTexture_ = new Texture();
-	pTexture_->Load("GameOverText.png");
 
 	return S_OK;
 }
