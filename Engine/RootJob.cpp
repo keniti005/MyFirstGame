@@ -1,5 +1,5 @@
 #include "RootJob.h"
-#include "../PlayScene.h"
+//#include "../PlayScene.h"
 #include "SceneManeger.h"
 
 RootJob::RootJob(GameObject* parent)
