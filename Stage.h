@@ -18,11 +18,5 @@ public:
 private:
     int hModel_;
     Tree* tree_;
-    std::vector<std::vector<int>> treeData_
-    {
-        {0,0,0,0,1,1},
-        {1,1,0,0,0,0},
-        {0,0,1,1,0,0}
-    };
 };
 

@@ -26,13 +26,13 @@ bool CsvReader::Load(std::string fileName)
 {
 	//ファイルを開く
 	HANDLE hFile;
-	hFile = CreateFile(fileName.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	hFile = CreateFileA(fileName.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	//開けなかった
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
 		std::string message = "「" + fileName + "」が開けません。\n開いている場合は閉じてください。";
-		MessageBox(NULL, message.c_str(), "BaseProjDx9エラー", MB_OK);
+		MessageBoxA(NULL, message.c_str(), "BaseProjDx9エラー", MB_OK);
 
 		return false;
 	}

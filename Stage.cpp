@@ -1,6 +1,7 @@
 #include "Stage.h"
 #include "Engine/Model.h"
 #include "Tree.h"
+#include "Engine/CsvReader.h"
 
 Stage::Stage(GameObject* parent)
 	:GameObject(parent,"Stage")
@@ -18,14 +19,29 @@ void Stage::Initialize()
 	//hModel_ = Model::Load("goalFlag.fbx");
 	assert(hModel_ >= 0);
 	transform_.position_.y = -2.0f;
-	for (int i = 0; i < treeData_.size(); i++)
+	CsvReader csv;
+	csv.Load("assets\\Stage00.csv");
+	int w = csv.GetWidth();
+	int h = csv.GetHeight();
+	//for (int i = 0; i < treeData_.size(); i++)
+	//{
+	//	for (int j = 0; j < treeData_[i].size(); j++)
+	//	{
+	//		if (treeData_[i][j] == 1)
+	//		{
+	//			tree_ = (Tree*)Instantiate<Tree>(this);
+	//			tree_->SetPostion(1.0f + i * 5.0f, 0.0f, 1.0f + j * 5.0f);
+	//		}
+	//	}
+	//}
+	for (int j = 0; j < h; j++)
 	{
-		for (int j = 0; j < treeData_[i].size(); j++)
+		for (int i = 0; i < w; i++)
 		{
-			if (treeData_[i][j] == 1)
+			if (csv.GetValue(i, j) == 1)
 			{
 				tree_ = (Tree*)Instantiate<Tree>(this);
-				tree_->SetPostion(1.0f + i * 5.0f, 0.0f, 1.0f + j * 5.0f);
+				tree_->SetPostion(0.0f + j * 5.0f, 0.0f, 0.0f + i * 5.0f);
 			}
 		}
 	}
