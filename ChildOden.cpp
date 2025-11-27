@@ -19,7 +19,7 @@ void ChildOden::Initialize()
 	transform_.scale_.x = 0.3f;
 	transform_.scale_.y = 0.3f;
 	transform_.scale_.z = 0.3f;
-	transform_.position_.x = 3.0f;
+	//transform_.position_.x = 3.0f;
 	hModel_ = Model::Load("oden.fbx");
 	assert(hModel_ >= 0);
 }

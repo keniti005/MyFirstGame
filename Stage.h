@@ -1,5 +1,9 @@
 #pragma once
 #include "Engine/GameObject.h"
+#include <vector>
+
+class Tree;
+
 class Stage :
     public GameObject
 {
@@ -13,5 +17,12 @@ public:
     int GetModelHandle(){ return hModel_; }
 private:
     int hModel_;
+    Tree* tree_;
+    std::vector<std::vector<int>> treeData_
+    {
+        {0,0,0,0,1,1},
+        {1,1,0,0,0,0},
+        {0,0,1,1,0,0}
+    };
 };
 
