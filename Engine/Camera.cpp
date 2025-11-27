@@ -23,10 +23,12 @@ void Camera::Update()
 
 void Camera::SetPosition(XMVECTOR position)
 {
+	position_ = position;
 }
 
 void Camera::SetTarget(XMVECTOR target)
 {
+	target_ = target;
 }
 
 XMMATRIX Camera::GetViewMatrix()

@@ -4,6 +4,7 @@
 #include "Stage.h"
 #include "Engine/Model.h"
 #include "Engine/Input.h"
+#include "Engine/Camera.h"
 
 Player::Player(GameObject* parent)
 	:GameObject(parent,"Player"),pFbx_(nullptr)
@@ -33,12 +34,36 @@ void Player::Initialize()
 
 void Player::Update()
 {
-
 	transform_.rotate_.y += 0.5f;
-	if (transform_.rotate_.y >= 720.0f)
+	if (Input::IsKey(DIK_D))
 	{
-		KillMe();
+		transform_.position_.x += 0.2f;
 	}
+	if (Input::IsKey(DIK_A))
+	{
+		transform_.position_.x -= 0.2f;
+	}
+	if (Input::IsKey(DIK_W))
+	{
+		transform_.position_.z += 0.2f;
+	}
+	if (Input::IsKey(DIK_S))
+	{
+		transform_.position_.z -= 0.2f;
+	}
+	//if (transform_.rotate_.y >= 720.0f)
+	//{
+	//	KillMe();
+	//}
+
+	XMVECTOR vPos = XMLoadFloat3(&transform_.position_);
+	XMVECTOR vCam = { 0,2.0f,-5.0f,0 };
+	XMVECTOR camPos;
+	camPos = vPos + vCam;
+	Camera::SetPosition(camPos);
+
+	XMVECTOR CamTarget = XMLoadFloat3(&transform_.position_);
+	Camera::SetTarget(CamTarget);
 }
 
 void Player::Draw()
