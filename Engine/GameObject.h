@@ -21,6 +21,7 @@ public:
 
 	void SetPostion(XMFLOAT3 position);
 	void SetPostion(float x, float y, float z);
+	XMFLOAT3 GetPosition(XMFLOAT3 position) { return transform_.position_; }
 	void KillMe();
 
 	GameObject* GetRootJob();

@@ -17,24 +17,24 @@ Player::~Player()
 
 void Player::Initialize()
 {
-	transform_.scale_.x = 0.7f;
-	transform_.scale_.y = 0.7f;
-	transform_.scale_.z = 0.7f;
+	transform_.scale_.x = 0.5f;
+	transform_.scale_.y = 0.5f;
+	transform_.scale_.z = 0.5f;
 	//hModel_ = Model::Load("oden.fbx");
 	//hModel_ = Model::Load("ironClub.fbx");
 	//hModel_ = Model::Load("woodenClub.fbx");
 	//hModel_ = Model::Load("smallClub.fbx");
 	hModel_ = Model::Load("bollPlayer.fbx");
 	assert(hModel_ >= 0);
-	pRChildOden_ = (ChildOden*)Instantiate<ChildOden>(this);
-	pLChildOden_ = (ChildOden*)Instantiate<ChildOden>(this);
-	pRChildOden_->SetPostion(2.0f, 1.0f, 0.0f);
-	pLChildOden_->SetPostion(-2.0f, 1.0f, 0.0f);
+	//pRChildOden_ = (ChildOden*)Instantiate<ChildOden>(this);
+	//pLChildOden_ = (ChildOden*)Instantiate<ChildOden>(this);
+	//pRChildOden_->SetPostion(2.0f, 1.0f, 0.0f);
+	//pLChildOden_->SetPostion(-2.0f, 1.0f, 0.0f);
 }
 
 void Player::Update()
 {
-	transform_.rotate_.y += 0.5f;
+	//transform_.rotate_.y += 0.5f;
 	if (Input::IsKey(DIK_D))
 	{
 		transform_.position_.x += 0.2f;
@@ -64,6 +64,15 @@ void Player::Update()
 
 	XMVECTOR CamTarget = XMLoadFloat3(&transform_.position_);
 	Camera::SetTarget(CamTarget);
+
+	if (Input::IsKey(DIK_UP))
+	{
+		transform_.position_.y += 0.2f;
+	}
+	if (Input::IsKey(DIK_DOWN))
+	{
+		transform_.position_.y -= 0.2f;
+	}
 }
 
 void Player::Draw()

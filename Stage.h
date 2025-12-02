@@ -17,6 +17,5 @@ public:
     int GetModelHandle(){ return hModel_; }
 private:
     int hModel_;
-    Tree* tree_;
 };
 

@@ -14,37 +14,14 @@ Stage::~Stage()
 
 void Stage::Initialize()
 {
+	transform_.scale_.x = 2.0f;
+	transform_.scale_.y = 2.0f;
+	transform_.scale_.z = 2.0f;
 	hModel_ = Model::Load("ground.fbx");
-	//hModel_ = Model::Load("tree.fbx");
 	//hModel_ = Model::Load("goalFlag.fbx");
 	assert(hModel_ >= 0);
 	transform_.position_.y = -2.0f;
-	CsvReader csv;
-	csv.Load("assets\\Stage00.csv");
-	int w = csv.GetWidth();
-	int h = csv.GetHeight();
-	//for (int i = 0; i < treeData_.size(); i++)
-	//{
-	//	for (int j = 0; j < treeData_[i].size(); j++)
-	//	{
-	//		if (treeData_[i][j] == 1)
-	//		{
-	//			tree_ = (Tree*)Instantiate<Tree>(this);
-	//			tree_->SetPostion(1.0f + i * 5.0f, 0.0f, 1.0f + j * 5.0f);
-	//		}
-	//	}
-	//}
-	for (int j = 0; j < h; j++)
-	{
-		for (int i = 0; i < w; i++)
-		{
-			if (csv.GetValue(i, j) == 1)
-			{
-				tree_ = (Tree*)Instantiate<Tree>(this);
-				tree_->SetPostion(0.0f + j * 5.0f, 0.0f, 0.0f + i * 5.0f);
-			}
-		}
-	}
+	Instantiate<Tree>(this);
 }
 
 void Stage::Update()
