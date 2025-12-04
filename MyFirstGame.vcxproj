@@ -138,6 +138,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Area.h" />
     <ClInclude Include="ChildOden.h" />
     <ClInclude Include="Engine\Camera.h" />
     <ClInclude Include="Engine\CsvReader.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="Tree.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Area.cpp" />
     <ClCompile Include="ChildOden.cpp" />
     <ClCompile Include="Engine\Camera.cpp" />
     <ClCompile Include="Engine\CsvReader.cpp" />

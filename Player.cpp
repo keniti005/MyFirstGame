@@ -17,9 +17,9 @@ Player::~Player()
 
 void Player::Initialize()
 {
-	transform_.scale_.x = 0.5f;
-	transform_.scale_.y = 0.5f;
-	transform_.scale_.z = 0.5f;
+	transform_.scale_.x = 1.0f;
+	transform_.scale_.y = 1.0f;
+	transform_.scale_.z = 1.0f;
 	//hModel_ = Model::Load("oden.fbx");
 	//hModel_ = Model::Load("ironClub.fbx");
 	//hModel_ = Model::Load("woodenClub.fbx");
