@@ -2,12 +2,12 @@
 #include "Engine/GameObject.h"
 #include <vector>
 
-class Stage :
+class Goal :
     public GameObject
 {
 public:
-    Stage(GameObject* parent);
-    ~Stage();
+    Goal(GameObject* parent);
+    ~Goal();
     void Initialize() override;
     void Update() override;
     void Draw() override;
