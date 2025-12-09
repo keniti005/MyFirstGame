@@ -36,8 +36,8 @@ void Tree::Draw()
 		{
 			if (csv.GetValue(x, y) == 1)
 			{
-				transform_.position_.x =  ((transform_.scale_.x + 5.0f) * x);
-				transform_.position_.z = -((transform_.scale_.z + 5.0f) * y);
+				transform_.position_.x =  (10.0f * x);
+				transform_.position_.z = -(10.0f * y);
 				Model::SetTransform(hModel_, transform_);
 				Model::Draw(hModel_);
 			}

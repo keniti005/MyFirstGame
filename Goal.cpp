@@ -47,8 +47,8 @@ void Goal::Draw()
 			{
 				for (int i = 0;i < hModels_.size();i++)
 				{
-					transform_.position_.x =   (transform_.scale_.x * x);
-					transform_.position_.z =  -(transform_.scale_.z * y);
+					transform_.position_.x =  (10.0f * x);
+					transform_.position_.z = -(10.0f * y);
 					Model::SetTransform(hModels_[i], transform_);
 					Model::Draw(hModels_[i]);
 				}

@@ -5,6 +5,7 @@
 #include "Engine/Model.h"
 #include "Engine/Input.h"
 #include "Engine/Camera.h"
+#include "Engine/CsvReader.h"
 
 Player::Player(GameObject* parent)
 	:GameObject(parent,"Player"),pFbx_(nullptr)
@@ -26,6 +27,21 @@ void Player::Initialize()
 	//hModel_ = Model::Load("smallClub.fbx");
 	hModel_ = Model::Load("bollPlayer.fbx");
 	assert(hModel_ >= 0);
+	CsvReader csv;
+	csv.Load("assets\\Stage00.csv");
+	int w = csv.GetWidth();
+	int h = csv.GetHeight();
+	for (int y = 0; y < h; y++)
+	{
+		for (int x = 0; x < w; x++)
+		{
+			if (csv.GetValue(x, y) == 11)
+			{
+				transform_.position_.x =  (10.0f * x);
+				transform_.position_.z = -(10.0f * y);
+			}
+		}
+	}
 	//pRChildOden_ = (ChildOden*)Instantiate<ChildOden>(this);
 	//pLChildOden_ = (ChildOden*)Instantiate<ChildOden>(this);
 	//pRChildOden_->SetPostion(2.0f, 1.0f, 0.0f);
