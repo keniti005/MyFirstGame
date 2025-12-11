@@ -38,13 +38,14 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 	//ローカル座標に、ワールド・ビュー・プロジェクション行列をかけて
 	//スクリーン座標に変換し、ピクセルシェーダーへ
     outData.pos = mul(pos, matWVP);
+    uv.w = 1;
     outData.uv = uv.xy;
     
     //シェーダー（影）の計算
     normal = mul(normal, matNormal); //法線ベクトルをワールド・ビュー・プロジェクション行列で変換
     normal = normalize(normal); //法線ベクトルを正規化=長さ1に)
     normal.w = 0; //w成分は0にする
-    float4 light = float4(0.2,0.5,-0.7, 0.0);
+    float4 light = float4(-0.5f,1.0f,-0.5f,0.0f);
     light = normalize(light);
     light.w = 0;
     outData.color = clamp(dot(normal, light), 0, 1);
@@ -62,7 +63,7 @@ float4 PS(VS_OUT inData) : SV_Target
     float4 color;
     if(useTexture)
     {
-        color = g_texture.Sample(g_sampler, inData.uv) * inData.color;
+        color = g_texture.Sample(g_sampler, inData.uv);// * inData.color;
     }
     else
     {
