@@ -50,45 +50,57 @@ void Player::Initialize()
 
 void Player::Update()
 {
-	//transform_.rotate_.y += 0.5f;
+	XMVECTOR vPos = XMLoadFloat3(&transform_.position_);
+
+	XMVECTOR vMoveY = XMVectorSet(0, 0.2f, 0, 0);
+	XMVECTOR vMoveZ = XMVectorSet(0, 0, 0.2f, 0);
+
+	XMMATRIX mRotate = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));
+	vMoveZ = XMVector3TransformCoord(vMoveZ,mRotate);
+
+#if true //デバッグ用
+	if (Input::IsKey(DIK_UP))
+	{
+		vPos += vMoveY;
+		XMStoreFloat3(&transform_.position_, vPos);
+	}
+	if (Input::IsKey(DIK_DOWN))
+	{
+		vPos -= vMoveY;
+		XMStoreFloat3(&transform_.position_, vPos);
+	}
 	if (Input::IsKey(DIK_D))
 	{
-		transform_.position_.x += 0.2f;
+		transform_.rotate_.y += 1.2f;
 	}
 	if (Input::IsKey(DIK_A))
 	{
-		transform_.position_.x -= 0.2f;
+		transform_.rotate_.y -= 1.2f;
 	}
 	if (Input::IsKey(DIK_W))
 	{
-		transform_.position_.z += 0.2f;
+		vPos += vMoveZ;
+		XMStoreFloat3(&transform_.position_, vPos);
 	}
 	if (Input::IsKey(DIK_S))
 	{
-		transform_.position_.z -= 0.2f;
+		vPos -= vMoveZ;
+		XMStoreFloat3(&transform_.position_, vPos);
 	}
+# endif
 	//if (transform_.rotate_.y >= 720.0f)
 	//{
 	//	KillMe();
 	//}
 
-	XMVECTOR vPos = XMLoadFloat3(&transform_.position_);
-	XMVECTOR vCam = { 0,2.0f,-5.0f,0 };
+	XMVECTOR vCam = { 0,2.0f,-7.0f,0 };
 	XMVECTOR camPos;
+	vCam = XMVector3TransformCoord(vCam, mRotate);
 	camPos = vPos + vCam;
 	Camera::SetPosition(camPos);
 
-	XMVECTOR CamTarget = XMLoadFloat3(&transform_.position_);
+	XMVECTOR CamTarget = XMLoadFloat3(&transform_.position_); 
 	Camera::SetTarget(CamTarget);
-
-	if (Input::IsKey(DIK_UP))
-	{
-		transform_.position_.y += 0.2f;
-	}
-	if (Input::IsKey(DIK_DOWN))
-	{
-		transform_.position_.y -= 0.2f;
-	}
 }
 
 void Player::Draw()
