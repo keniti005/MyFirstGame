@@ -22,7 +22,7 @@ void PlayScene::Initialize()
 	//childList_.push_back(pPlayer);
 
 	Instantiate<Player>(this);
-	Instantiate<Enemy>(this);
+	//Instantiate<Enemy>(this);
 	Instantiate<Stage>(this);
 }
 

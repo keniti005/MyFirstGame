@@ -60,3 +60,35 @@ void Model::Release()
     }
     modelList.clear();//配列を空にする
 }
+
+void Model::RayCast(int hModel, RayCastData& rayData)
+{
+    //その時点での対象モデルのトランスフォームをカリキュレーション
+    modelList[hModel]->transform_.Calculation();
+
+    //ワールド行列取得
+    XMMATRIX worldMatrix = modelList[hModel]->transform_.GetWorldMatrix();
+
+    //ワールド行列の逆行列
+    XMMATRIX wInv = modelList[hModel]->transform_.GetNomalMatrix();
+
+    //レイの通過地点を求める
+    XMVECTOR vDirVec{ rayData.start.x + rayData.dir.x,rayData.start.y + rayData.dir.y,rayData.start.z + rayData.dir.z,0.0f };
+
+    //rayData.startをモデル空間に変換
+    XMVECTOR vstart = XMLoadFloat3(&rayData.start);
+    //https://learn.microsoft.com/ja-jp/windows/win32/api/directxmath/
+    // //ここから、3次元ベクトルの変換関数を探す w=1のときの変換
+    vstart = XMVector3Transform(vstart,wInv);
+    XMStoreFloat3(&rayData.start, vstart);//変換結果をrayData.startに格納
+
+    //(始点から方向ベクトルをちょい伸ばした先)通過点にかける(モデル空間に変換)
+    vDirVec = XMVector3Transform(vDirVec,wInv);
+
+    //rayData.dirをvstartからvDirVecに向かうベクトルにする
+    XMVECTOR dirAtLocal = XMVectorSubtractAngles(vDirVec , vstart);
+    XMStoreFloat3(&rayData.dir, vDirVec);//変換結果をrayData.dirに格納
+
+    //指定したモデル番号のFBXにレイキャスト
+    modelList[hModel]->pfbx_->RayCast(rayData);
+}
