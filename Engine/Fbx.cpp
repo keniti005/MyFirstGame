@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include <filesystem>
 #include <string>
+#include <DirectXCollision.h>
 
 namespace fs = std::filesystem;
 
@@ -330,7 +331,16 @@ void Fbx::RayCast(RayCastData& rayData)
 			XMStoreFloat3(&v0, V0.position);
 			XMStoreFloat3(&v1, V1.position);
 			XMStoreFloat3(&v2, V2.position);
-			rayData.isHit = InterSect(rayData.start,rayData.dir,v0,v1,v2);
+			rayData.isHit = InterSect(rayData.start,rayData.dir,v0,v1,v2,rayData.dist);
+
+			//rayData.isHit = TriangleTests::Intersects(
+			//	XMLoadFloat4(&rayData.start),
+			//	XMLoadFloat4(&rayData.dir),
+			//	V0.position,
+			//	V1.position,
+			//	V2.position,
+			//	rayData.dist
+			//);
 		}
 
 		if (rayData.isHit)

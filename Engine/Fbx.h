@@ -64,7 +64,7 @@ private:
 			- a.x * b.z * c.y
 			);
 	}
-	bool InterSect(XMFLOAT3 origin, XMFLOAT3 ray, XMFLOAT3 v0, XMFLOAT3 v1, XMFLOAT3 v2)
+	bool InterSect(XMFLOAT3 origin, XMFLOAT3 ray, XMFLOAT3 v0, XMFLOAT3 v1, XMFLOAT3 v2,float dist)
 	{
 		// ---- ベクトルの準備 ----
 		// Ray の始点・方向、三角形の頂点を XMVECTOR に変換
@@ -149,7 +149,7 @@ private:
 		// u >= 0  : v0 → v1 方向に外れていない
 		// v >= 0  : v0 → v2 方向に外れていない
 		// u + v <= 1 : 三角形の内部に入っている
-		if (t >= 0 && u >= 0 && v + v >= 0 && u + v <= 1)
+		if (t >= 0 && u >= 0 && v >= 0 && u + v <= 1)
 		{
 			return true;
 		}

@@ -70,7 +70,7 @@ void Model::RayCast(int hModel, RayCastData& rayData)
     XMMATRIX worldMatrix = modelList[hModel]->transform_.GetWorldMatrix();
 
     //ワールド行列の逆行列
-    XMMATRIX wInv = modelList[hModel]->transform_.GetNomalMatrix();
+    XMMATRIX wInv = XMMatrixInverse(nullptr,worldMatrix);
 
     //レイの通過地点を求める
     XMVECTOR vDirVec{ rayData.start.x + rayData.dir.x,rayData.start.y + rayData.dir.y,rayData.start.z + rayData.dir.z,0.0f };
@@ -86,8 +86,9 @@ void Model::RayCast(int hModel, RayCastData& rayData)
     vDirVec = XMVector3Transform(vDirVec,wInv);
 
     //rayData.dirをvstartからvDirVecに向かうベクトルにする
-    XMVECTOR dirAtLocal = XMVectorSubtractAngles(vDirVec , vstart);
-    XMStoreFloat3(&rayData.dir, vDirVec);//変換結果をrayData.dirに格納
+    XMVECTOR dirAtLocal = XMVectorSubtract(vDirVec , vstart);
+    dirAtLocal = XMVector3Normalize(dirAtLocal);
+    XMStoreFloat3(&rayData.dir, dirAtLocal);//変換結果をrayData.dirに格納
 
     //指定したモデル番号のFBXにレイキャスト
     modelList[hModel]->pfbx_->RayCast(rayData);

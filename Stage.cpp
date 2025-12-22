@@ -1,5 +1,7 @@
 #include "Stage.h"
 #include "Engine/Model.h"
+#include "Engine/Input.h"
+#include "Engine/Camera.h"
 
 Stage::Stage(GameObject* parent)
 	:GameObject(parent,"Stage"),XSIZE(10),ZSIZE(10)
@@ -20,22 +22,15 @@ void Stage::Initialize()
 
 void Stage::Update()
 {
-	RayCastData data;
-	XMStoreFloat3(&data.start, XMVectorSet(0.0f,3.0f,0.0f,0.0f));
-	XMStoreFloat3(&data.dir, XMVectorSet(0.0f, -1.0f, 0.0f, 0.0f));
-	Transform t;
-	t.position_.x = transform_.position_.x;
-	t.position_.y = transform_.position_.y;
-	t.position_.z = transform_.position_.z;
-	Model::SetTransform(hModel_, transform_);
+	XMFLOAT3 mousePosFront;
+	XMStoreFloat3(&mousePosFront, Input::GetMousePosition());
+	mousePosFront.z = 0.0f;
 
-	Model::RayCast(hModel_, data);
+	XMFLOAT3 mousePosBack;
+	XMStoreFloat3(&mousePosBack, Input::GetMousePosition());
+	mousePosBack.z = 1.0f;
 
-	if (data.isHit)
-	{
-		int a = 0;
-		a++;
-	}
+
 }
 
 void Stage::Draw()
@@ -50,8 +45,50 @@ void Stage::Draw()
 	//		Model::Draw(hModel_);
 	//	}
 	//}
+
+	Transform t;
+	t.position_.x = 5;
+	t.position_.y = 0;
+	t.position_.z = 5;
 	Model::SetTransform(hModel_, transform_);
 	Model::Draw(hModel_);
+	RayCastData data{
+		{ 0.0f, 0.0f, 5.0f },
+		{ 0.0f,-1.0f, 0.0f },
+		false,
+		0.0f
+	};
+
+	Model::RayCast(hModel_, data);
+
+	if (data.isHit)
+	{
+		int a = 0;
+		a++;
+	}
+
+	//Transform t;
+	//t.position_.x = 5;
+	//t.position_.y = 0;
+	//t.position_.z = 5;
+	//Model::SetTransform(hModel_, transform_);
+	//Model::Draw(hModel_);
+	//RayCastData data{
+	//	{ 0.0f, 0.0f, 5.0f, 0.0f },
+	//	{ 0.0f,-1.0f, 0.0f, 0.0f },
+	//	false,
+	//	0.0f
+	//};
+	//
+	//Model::RayCast(hModel_, data);
+	//
+	//if (data.isHit)
+	//{
+	//	int a = 0;
+	//	a++;
+	//}
+
+	//Model::SetTransform(hModel_, transform_);
 }
 
 void Stage::Release()
