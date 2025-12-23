@@ -2,9 +2,10 @@
 #include "Engine/Model.h"
 #include "Engine/Input.h"
 #include "Engine/Camera.h"
+#include "resource.h"
 
 Stage::Stage(GameObject* parent)
-	:GameObject(parent,"Stage"),XSIZE(10),ZSIZE(10)
+	:GameObject(parent,"Stage")
 {
 }
 
@@ -94,4 +95,56 @@ void Stage::Draw()
 void Stage::Release()
 {
 	Model::Release();
+}
+
+BOOL Stage::localProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (message) {
+	case WM_COMMAND: //コントロールの操作
+		switch (LOWORD(wParam))
+		{
+		case IDOK:
+			EndDialog(hWnd, IDOK);
+			return TRUE;
+		case IDCANCEL:
+			EndDialog(hWnd, IDCANCEL);
+			return TRUE;
+		}
+		break;
+	}
+	return FALSE;
+}
+
+BOOL Stage::menuProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{//名前:IDC_COMBO1
+	switch (message) 
+	{
+	case WM_INITDIALOG:
+		SendMessage(GetDlgItem(hWnd, IDC_RADIO1), BM_SETCHECK, BST_CHECKED,0);
+		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"デフォルト");
+		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"レンガ");
+		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"草地");
+		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"砂地");
+		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"水場");
+		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_GETCURSEL, 0, 0);
+		return TRUE;
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDC_RADIO1:
+			mode_ = 0;//上げる
+			return TRUE;
+		case IDC_RADIO2:
+			mode_ = 1;//下げる
+			return TRUE;
+		case IDC_RADIO3:
+			mode_ = 2;//種類変更
+			return TRUE;
+		case IDC_COMBO1:
+			select_ = (int)SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_GETCURSEL, 0, 0);
+			return TRUE;
+		}
+		return FALSE;
+	}
+	return FALSE;
 }

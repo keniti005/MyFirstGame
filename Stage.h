@@ -1,11 +1,21 @@
 #pragma once
 #include "Engine/GameObject.h"
+#include <Windows.h>
+
+namespace
+{
+	const int XSIZE = 10;
+	const int ZSIZE = 10;
+	const int MODEL_NUM = 5;
+}
 
 enum BLOCK_TYPE
 {
 	DEFAULT,
-	WATER,
-	SAND
+	BRICK,
+	GRASS,
+	SAND,
+	WATER
 };
 
 struct sData
@@ -24,8 +34,14 @@ public:
 	void Update() override;
 	void Draw() override;
 	void Release() override;
+	BOOL localProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+	BOOL menuProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);//操作パネル用のプロシージャ
+	//void SetBlock(BLOCK_TYPE type, int x, int z) { GetT(x, z).type = type; }
+	//sData GetT()
 private:
 	int hModel_;
-	const int XSIZE;
-	const int ZSIZE;
+	sData sTable[ZSIZE][XSIZE];
+	int hModel[MODEL_NUM];
+	int mode_;//0:上げる 1:下げる 2:種類変更
+	int select_;//ボックスの種類
 };

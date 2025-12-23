@@ -24,7 +24,7 @@ void TestScene::Update()
 	//SceneManeger::ChangeScene(SCENE_ID_PLAY);‚ðŒÄ‚Ño‚·
 	if (Input::IsKeyDown(DIK_SPACE))
 	{
-		SceneManeger* pSceneManeger = (SceneManeger*)FindObjectByName("SceneManeger");
+		SceneManeger* pSceneManeger = (SceneManeger*)FindObject("SceneManeger");
 		pSceneManeger->ChangeScene(SCENE_ID_PLAY);
 	}
 }

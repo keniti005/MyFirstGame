@@ -24,7 +24,7 @@ void GameOverScene::Update()
 	if (Input::IsKeyDown(DIK_T))
 	{
 		MessageBoxA(0, "テストシーンに移動します", "シーン遷移", MB_OK);
-		SceneManeger* pSceneManeger = (SceneManeger*)FindObjectByName("SceneManeger");
+		SceneManeger* pSceneManeger = (SceneManeger*)FindObject("SceneManeger");
 		pSceneManeger->ChangeScene(SCENE_ID_TEST);
 	}
 }

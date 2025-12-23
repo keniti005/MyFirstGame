@@ -8,6 +8,7 @@
 #include "Engine/Transform.h"
 #include "Engine/Input.h"
 #include "Engine/RootJob.h"
+#include "Stage.h"
 
 #pragma comment(lib, "winmm.lib")
 
@@ -34,6 +35,8 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    DlgProc(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    ManuProc(HWND, UINT, WPARAM, LPARAM);
 
 //WinMainの引数
 //hInstance：クラスのウィンドウプロシージャを含むインスタンスへのハンドル（実行可能ファイルまたはEXEの識別）
@@ -84,6 +87,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     pRootJob->Initialize();
     Camera::Initialize();
     
+    HWND hDig = CreateDialog(hInst, MAKEINTRESOURCE(IDD_DIALOG2), hWnd, ManuProc, 0);
+    ShowWindow(hDig, SW_SHOW);
+
     // メイン メッセージ ループ:
     while (msg.message != WM_QUIT)
     {
@@ -134,6 +140,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         
         //pRootJobから、すべてのオブジェクトの描画をする
         pRootJob->DrawSub();
+
+        //if (Input::IsKeyDown(DIK_M))
+        //{
+        //    HWND hDig = CreateDialog(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, DlgProc, 0);
+        //    ShowWindow(hDig, SW_SHOW);
+        //}
 
         Direct3D::EndDraw();
     }
@@ -303,6 +315,16 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     }
     return (INT_PTR)FALSE;
+}
+
+INT_PTR DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    return ((Stage*)pRootJob->FindObject("Stage"))->localProc(hWnd,message,wParam,lParam);
+}
+
+INT_PTR ManuProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    return ((Stage*)pRootJob->FindObject("Stage"))->menuProc(hWnd, message, wParam, lParam);
 }
 
 //CreateWindowEx

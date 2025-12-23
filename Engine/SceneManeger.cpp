@@ -17,7 +17,7 @@ void SceneManeger::Initialize()
 {
 	currentSceneID_ = SCENE_ID_TEST;
 	nextSceneID_ = currentSceneID_;
-	Instantiate<TestScene>(this);
+	Instantiate<PlayScene>(this);
 }
 
 void SceneManeger::Update()

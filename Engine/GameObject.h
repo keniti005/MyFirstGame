@@ -28,7 +28,7 @@ public:
 
 	GameObject* GetRootJob();
 	GameObject* FindChildObject(const std::string& name);
-	GameObject* FindObjectByName(const std::string& name);
+	GameObject* FindObject(const std::string& name);
 
 	void AddCollider(SphereCollider* pCollider);
 	void Collision(GameObject* pTarget);
