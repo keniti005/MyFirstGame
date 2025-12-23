@@ -76,19 +76,19 @@ void Model::RayCast(int hModel, RayCastData& rayData)
     XMVECTOR vDirVec{ rayData.start.x + rayData.dir.x,rayData.start.y + rayData.dir.y,rayData.start.z + rayData.dir.z,0.0f };
 
     //rayData.start‚ğƒ‚ƒfƒ‹‹óŠÔ‚É•ÏŠ·
-    XMVECTOR vstart = XMLoadFloat3(&rayData.start);
+    XMVECTOR vstart = XMLoadFloat4(&rayData.start);
     //https://learn.microsoft.com/ja-jp/windows/win32/api/directxmath/
     // //‚±‚±‚©‚çA3ŸŒ³ƒxƒNƒgƒ‹‚Ì•ÏŠ·ŠÖ”‚ğ’T‚· w=1‚Ì‚Æ‚«‚Ì•ÏŠ·
     vstart = XMVector3Transform(vstart,wInv);
-    XMStoreFloat3(&rayData.start, vstart);//•ÏŠ·Œ‹‰Ê‚ğrayData.start‚ÉŠi”[
+    XMStoreFloat4(&rayData.start, vstart);//•ÏŠ·Œ‹‰Ê‚ğrayData.start‚ÉŠi”[
 
     //(n“_‚©‚ç•ûŒüƒxƒNƒgƒ‹‚ğ‚¿‚å‚¢L‚Î‚µ‚½æ)’Ê‰ß“_‚É‚©‚¯‚é(ƒ‚ƒfƒ‹‹óŠÔ‚É•ÏŠ·)
     vDirVec = XMVector3Transform(vDirVec,wInv);
 
     //rayData.dir‚ğvstart‚©‚çvDirVec‚ÉŒü‚©‚¤ƒxƒNƒgƒ‹‚É‚·‚é
     XMVECTOR dirAtLocal = XMVectorSubtract(vDirVec , vstart);
-    dirAtLocal = XMVector3Normalize(dirAtLocal);
-    XMStoreFloat3(&rayData.dir, dirAtLocal);//•ÏŠ·Œ‹‰Ê‚ğrayData.dir‚ÉŠi”[
+    dirAtLocal = XMVector4Normalize(dirAtLocal);
+    XMStoreFloat4(&rayData.dir, dirAtLocal);//•ÏŠ·Œ‹‰Ê‚ğrayData.dir‚ÉŠi”[
 
     //w’è‚µ‚½ƒ‚ƒfƒ‹”Ô†‚ÌFBX‚ÉƒŒƒCƒLƒƒƒXƒg
     modelList[hModel]->pfbx_->RayCast(rayData);

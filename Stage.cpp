@@ -1,4 +1,6 @@
 #include "Stage.h"
+#include <string>
+#include <vector>
 #include "Engine/Model.h"
 #include "Engine/Input.h"
 #include "Engine/Camera.h"
@@ -7,6 +9,13 @@
 Stage::Stage(GameObject* parent)
 	:GameObject(parent,"Stage")
 {
+	for (int j = 0;j < ZSIZE;j++) {
+		for (int i = 0;i < XSIZE;i++)
+		{
+			SetBlock(BLOCK_TYPE::DEFAULT, i, j);
+			SetBlockHeight(i, j, 1 + rand() % 14);
+		}
+	}
 }
 
 Stage::~Stage()
@@ -16,20 +25,29 @@ Stage::~Stage()
 void Stage::Initialize()
 {
 	transform_.scale_ = XMFLOAT3(1.0f, 1.0f, 1.0f);
+	std::vector<std::string> modelName
+	{
+		"Cube.fbx" 
+	};
+	for (int i = 0;i < modelName.size();i++)
+	{
+		hModel[i] = Model::Load(modelName[i]);
+		assert(hModel[i] >= 0);
+	}
 	//transform_.position_.y -= transform_.scale_.y / 2.0f;
-	hModel_ = Model::Load("Cube.fbx");
-	assert(hModel_ >= 0);
+	//hModel_ = Model::Load("Cube.fbx");
+	//assert(hModel_ >= 0);
 }
 
 void Stage::Update()
 {
-	XMFLOAT3 mousePosFront;
-	XMStoreFloat3(&mousePosFront, Input::GetMousePosition());
-	mousePosFront.z = 0.0f;
+	//XMFLOAT3 mousePosFront;
+	//XMStoreFloat3(&mousePosFront, Input::GetMousePosition());
+	//mousePosFront.z = 0.0f;
 
-	XMFLOAT3 mousePosBack;
-	XMStoreFloat3(&mousePosBack, Input::GetMousePosition());
-	mousePosBack.z = 1.0f;
+	//XMFLOAT3 mousePosBack;
+	//XMStoreFloat3(&mousePosBack, Input::GetMousePosition());
+	//mousePosBack.z = 1.0f;
 
 
 }
@@ -51,21 +69,23 @@ void Stage::Draw()
 	t.position_.x = 5;
 	t.position_.y = 0;
 	t.position_.z = 5;
-	Model::SetTransform(hModel_, transform_);
-	Model::Draw(hModel_);
-	RayCastData data{
-		{ 0.0f, 0.0f, 5.0f },
-		{ 0.0f,-1.0f, 0.0f },
+	t.scale_ = { 0.95f,0.95f,0.95f };
+	int type = BLOCK_TYPE::DEFAULT;
+	Model::SetTransform(hModel[type], t);
+	Model::Draw(hModel[type]);
+	RayCastData data
+	{
+		{ 0.0f, 0.0f, 5.0f, 0.0f },
+		{ 0.0f,-1.0f, 0.0f, 0.0f },
 		false,
 		0.0f
 	};
 
-	Model::RayCast(hModel_, data);
+	Model::RayCast(hModel[type], data);
 
 	if (data.isHit)
 	{
-		int a = 0;
-		a++;
+		MessageBoxA(NULL, "Hit", "Info", MB_OK);
 	}
 
 	//Transform t;

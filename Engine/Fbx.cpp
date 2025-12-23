@@ -166,7 +166,7 @@ void Fbx::InitVertex(FbxMesh* mesh)
 			FbxLayerElementUV* pUV = mesh->GetLayer(0)->GetUVs();
 			int uvIndex = mesh->GetTextureUVIndex(poly, vertex, FbxLayerElement::eTextureDiffuse);
 			FbxVector2 uv = pUV->GetDirectArray().GetAt(uvIndex);
-			pVertices_[index].uv = XMVectorSet((float)uv.mData[0], (float)(1.0f - uv.mData[1]), 0.0f, 0.0f);
+			pVertices_[index].uv = XMVectorSet((float)uv.mData[0], (float)(1.0f - uv.mData[1]), 0.0f, 1.0f);
 
 			//í∏ì_ÇÃèÄîı
 			FbxVector4 normal;
@@ -327,11 +327,24 @@ void Fbx::RayCast(RayCastData& rayData)
 			VERTEX& V0 = pVertices_[indices[i + 0]];
 			VERTEX& V1 = pVertices_[indices[i + 1]];
 			VERTEX& V2 = pVertices_[indices[i + 2]];
-			XMFLOAT3 v0,v1,v2;
-			XMStoreFloat3(&v0, V0.position);
-			XMStoreFloat3(&v1, V1.position);
-			XMStoreFloat3(&v2, V2.position);
-			rayData.isHit = InterSect(rayData.start,rayData.dir,v0,v1,v2,rayData.dist);
+			rayData.isHit = TriangleTests::Intersects(
+				XMLoadFloat4(&rayData.start),
+				XMLoadFloat4(&rayData.dir),
+				V0.position,
+				V1.position,
+				V2.position,
+				rayData.dist
+			);			
+			//XMFLOAT3 v0,v1,v2;
+			//XMStoreFloat3(&v0, V0.position);
+			//XMStoreFloat3(&v1, V1.position);
+			//XMStoreFloat3(&v2, V2.position);
+			//rayData.isHit = InterSect(rayData.start,rayData.dir,v0,v1,v2,rayData.dist);
+			 
+			if (rayData.isHit)
+			{
+				return;
+			}
 
 			//rayData.isHit = TriangleTests::Intersects(
 			//	XMLoadFloat4(&rayData.start),
@@ -342,12 +355,6 @@ void Fbx::RayCast(RayCastData& rayData)
 			//	rayData.dist
 			//);
 		}
-
-		if (rayData.isHit)
-		{
-			return;
-		}
-
 	}
 	rayData.isHit = false;
 }
