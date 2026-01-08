@@ -24,8 +24,8 @@ void Player::Initialize()
 	//transform_.scale_.x = 0.7f;
 	//transform_.scale_.y = 0.7f;
 	//transform_.scale_.z = 0.7f;
-	hModel_ = Model::Load("oden.fbx");
-	assert(hModel_ >= 0);
+	//hModel_ = Model::Load("oden.fbx");
+	//assert(hModel_ >= 0);
 	//pRChildOden_ = (ChildOden*)Instantiate<ChildOden>(this);
 	//pLChildOden_ = (ChildOden*)Instantiate<ChildOden>(this);
 	//pRChildOden_->SetPostion(2.0f, 1.0f, 0.0f);
@@ -88,7 +88,7 @@ void Player::Draw()
 	//{
 	//	pFbx_->Draw(transform_);
 	//}
-	Model::SetTransform(hModel_, transform_);
+	//Model::SetTransform(hModel_, transform_);
 	//Model::Draw(hModel_);
 }
 

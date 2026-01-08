@@ -13,7 +13,7 @@ Stage::Stage(GameObject* parent)
 		for (int i = 0;i < XSIZE;i++)
 		{
 			SetBlock(BLOCK_TYPE::DEFAULT, i, j);
-			SetBlockHeight(i, j, 1 + rand() % 14);
+			SetBlockHeight(i, j, 1);
 		}
 	}
 }
@@ -27,7 +27,11 @@ void Stage::Initialize()
 	transform_.scale_ = XMFLOAT3(1.0f, 1.0f, 1.0f);
 	std::vector<std::string> modelName
 	{
-		"Cube.fbx" 
+		"Cube.fbx",
+		"Brick.fbx",
+		"Sand.fbx",
+		"Water.fbx",
+		"Grass.fbx"
 	};
 	for (int i = 0;i < modelName.size();i++)
 	{
@@ -41,15 +45,17 @@ void Stage::Initialize()
 
 void Stage::Update()
 {
-	//XMFLOAT3 mousePosFront;
-	//XMStoreFloat3(&mousePosFront, Input::GetMousePosition());
-	//mousePosFront.z = 0.0f;
+	XMFLOAT3 mousePosFront;
+	XMStoreFloat3(&mousePosFront, Input::GetMousePosition());
+	mousePosFront.z = 0.0f;
 
-	//XMFLOAT3 mousePosBack;
-	//XMStoreFloat3(&mousePosBack, Input::GetMousePosition());
-	//mousePosBack.z = 1.0f;
+	XMFLOAT3 mousePosBack;
+	XMStoreFloat3(&mousePosBack, Input::GetMousePosition());
+	mousePosBack.z = 1.0f;
 
-
+	//XMMATRIX ViewPort;
+	//
+	//= ViewPort * Camera::GetProjectionMatrix() * Camera::GetViewMatrix();
 }
 
 void Stage::Draw()
@@ -65,51 +71,59 @@ void Stage::Draw()
 	//	}
 	//}
 
-	Transform t;
-	t.position_.x = 5;
-	t.position_.y = 0;
-	t.position_.z = 5;
-	t.scale_ = { 0.95f,0.95f,0.95f };
-	int type = BLOCK_TYPE::DEFAULT;
-	Model::SetTransform(hModel[type], t);
-	Model::Draw(hModel[type]);
-	RayCastData data
+	for (int j = 0;j < ZSIZE;j++) 
 	{
-		{ 0.0f, 0.0f, 5.0f, 0.0f },
-		{ 0.0f,-1.0f, 0.0f, 0.0f },
-		false,
-		0.0f
-	};
+		for (int i = 0;i < XSIZE;i++)
+		{
+			for (int k = 0; k < (int)(GetT(i, j).height); k++) 
+			{
+				int type = (int)(GetT(i, j).type);
+				Transform t;
+				t.position_.x = i - 10/2.0;
+				t.position_.z = j;
+				t.position_.y = k;
+				t.scale_ = { 0.95, 0.95, 0.95 };
+				Model::SetTransform(hModel[type], t);
+				Model::Draw(hModel[type]);
 
-	Model::RayCast(hModel[type], data);
+				RayCastData data
+				{
+					{ 0.0f, 0.0f, 0.0f, 0.0f },
+					{ 0.0f,-1.0f, 0.0f, 0.0f },
+					false,
+					0.0f
+				};
 
-	if (data.isHit)
-	{
-		MessageBoxA(NULL, "Hit", "Info", MB_OK);
+				Model::RayCast(hModel[type], data);
+				if (data.isHit)
+				{
+					//MessageBoxA(NULL, "Hit", "Info", MB_OK);
+				}
+			}
+		}
 	}
 
 	//Transform t;
 	//t.position_.x = 5;
 	//t.position_.y = 0;
 	//t.position_.z = 5;
-	//Model::SetTransform(hModel_, transform_);
-	//Model::Draw(hModel_);
-	//RayCastData data{
-	//	{ 0.0f, 0.0f, 5.0f, 0.0f },
+	//t.scale_ = { 0.95f,0.95f,0.95f };
+	//int type = select_;
+	//Model::SetTransform(hModel[type], t);
+	//Model::Draw(hModel[type]);
+	//RayCastData data
+	//{
+	//	{ t.position_.x, t.position_.y, t.position_.z, 0.0f },
 	//	{ 0.0f,-1.0f, 0.0f, 0.0f },
 	//	false,
 	//	0.0f
 	//};
 	//
-	//Model::RayCast(hModel_, data);
-	//
+	//Model::RayCast(hModel[type], data);
 	//if (data.isHit)
 	//{
-	//	int a = 0;
-	//	a++;
+	//	//MessageBoxA(NULL, "Hit", "Info", MB_OK);
 	//}
-
-	//Model::SetTransform(hModel_, transform_);
 }
 
 void Stage::Release()
@@ -143,9 +157,9 @@ BOOL Stage::menuProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		SendMessage(GetDlgItem(hWnd, IDC_RADIO1), BM_SETCHECK, BST_CHECKED,0);
 		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"デフォルト");
 		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"レンガ");
-		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"草地");
 		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"砂地");
 		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"水場");
+		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"草地");
 		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_GETCURSEL, 0, 0);
 		return TRUE;
 	case WM_COMMAND:

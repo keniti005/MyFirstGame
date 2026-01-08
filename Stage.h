@@ -38,6 +38,7 @@ public:
 	BOOL menuProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);//操作パネル用のプロシージャ
 	void SetBlock(BLOCK_TYPE type, int x, int z) { GetT(x, z).type = type; }
 	void SetBlockHeight(int x, int z, int height) { GetT(x, z).height = height; }
+
 	sData& GetT(int x, int z) { return sTable[z][x]; }
 private:
 	int hModel_;
