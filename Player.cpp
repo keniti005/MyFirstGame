@@ -8,7 +8,7 @@
 #include "Engine/SceneManeger.h"
 
 Player::Player(GameObject* parent)
-	:GameObject(parent,"Player"),pFbx_(nullptr)
+	:GameObject(parent,"Player"),pFbx_(nullptr),hModel_(-1)
 {
 	//pFbx_ = new Fbx;
 	//pFbx_->Load("Oden.fbx");
