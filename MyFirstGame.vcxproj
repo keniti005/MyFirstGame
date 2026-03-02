@@ -150,7 +150,7 @@
     <ClInclude Include="Engine\SceneManeger.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Engine\Input.h" />
-    <ClInclude Include="GameOverScene.h" />
+    <ClInclude Include="ResultScene.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Engine\Quad.h" />
     <ClInclude Include="Player.h" />
@@ -161,7 +161,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Engine\Texture.h" />
     <ClInclude Include="Engine\Transform.h" />
-    <ClInclude Include="TestScene.h" />
+    <ClInclude Include="TitleScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bullet.cpp" />
@@ -175,7 +175,7 @@
     <ClCompile Include="Engine\Model.cpp" />
     <ClCompile Include="Engine\RootJob.cpp" />
     <ClCompile Include="Engine\SceneManeger.cpp" />
-    <ClCompile Include="GameOverScene.cpp" />
+    <ClCompile Include="ResultScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Quad.cpp" />
     <ClCompile Include="Engine\Sprite.cpp" />
@@ -184,7 +184,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Engine\SphereCollider.cpp" />
-    <ClCompile Include="TestScene.cpp" />
+    <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MyFirstGame.rc" />

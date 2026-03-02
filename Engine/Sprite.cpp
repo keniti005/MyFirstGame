@@ -4,29 +4,36 @@
 #include "Texture.h"
 
 
-Sprite::Sprite()
+Sprite::Sprite(const char* filename)
 	: pVertexBuffer_(nullptr),
 	pIndexBuffer_(nullptr),
 	pConstantBuffer_(nullptr),
 	pTexture_(nullptr)
 {
+	HRESULT hr = InitializeBuffers();
+	if (FAILED(hr))
+	{
+		return;
+	}
+
+	LoadTexture(filename);
 }
 
 Sprite::~Sprite()
 {
 }
 
-HRESULT Sprite::Initialize()
+HRESULT Sprite::InitializeBuffers()
 {
 	HRESULT hr;
 	//縦横2の乗数
 	VERTEX vertices[] =
 	{
 		//{{position}, {uv}}
-		{{ -0.5f,  0.5f, 0.0f, 0.0f}, {0.0f,  0.0f}},//四角形の頂点（左上）
-		{{  0.5f,  0.5f, 0.0f, 0.0f}, {1.0f,  0.0f}},//四角形の頂点（右上）
-		{{  0.5f, -0.5f, 0.0f, 0.0f}, {1.0f,  1.0f}},//四角形の頂点（右下）
-		{{ -0.5f, -0.5f, 0.0f, 0.0f}, {0.0f,  1.0f}} //四角形の頂点（左下）
+		{{ -1.0f,  1.0f, 0.0f, 0.0f}, {0.0f,  0.0f}},//四角形の頂点（左上）
+		{{  1.0f,  1.0f, 0.0f, 0.0f}, {1.0f,  0.0f}},//四角形の頂点（右上）
+		{{  1.0f, -1.0f, 0.0f, 0.0f}, {1.0f,  1.0f}},//四角形の頂点（右下）
+		{{ -1.0f, -1.0f, 0.0f, 0.0f}, {0.0f,  1.0f}} //四角形の頂点（左下）
 	};
 
 	// 頂点データ用バッファの設定
@@ -82,8 +89,9 @@ HRESULT Sprite::Initialize()
 		return hr;
 	}
 
-	//ロードすれば画像表示ができる(ない場合は黒色)
-	pTexture_ = new Texture();
+	////ロードすれば画像表示ができる(ない場合は黒色)
+	//pTexture_ = new Texture();
+	//pTexture_->Load("spriteTest.jpg");
 
 	return S_OK;
 }
@@ -92,10 +100,10 @@ void Sprite::Draw(XMMATRIX& worldMatrix)
 {
 	//2D表示では必要
 	Direct3D::SetShader(SHADER_TYPE::SHADER_2D);
-	Transform transform;
+
 	//コンスタントバッファに渡す情報
 	CONSTANT_BUFFER cb;
-	cb.matWorld = XMMatrixTranspose(worldMatrix);
+	cb.matWorld = worldMatrix;
 
 
 	D3D11_MAPPED_SUBRESOURCE pdata;
@@ -117,13 +125,28 @@ void Sprite::Draw(XMMATRIX& worldMatrix)
 	Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用	
 	Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
 
-	ID3D11SamplerState* pSampler = pTexture_->GetSampler();
-	Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
+	if (pTexture_)
+	{
+		ID3D11SamplerState* pSampler = pTexture_->GetSampler();
+		Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
 
-	ID3D11ShaderResourceView* pSRV = pTexture_->GetSRV();
-	Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV);
+		ID3D11ShaderResourceView* pSRV = pTexture_->GetSRV();
+		Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV);
+	}
 
 	Direct3D::pContext->DrawIndexed(6, 0, 0);
+}
+
+void Sprite::LoadTexture(const char* filename)
+{
+	if (pTexture_)
+	{
+		delete pTexture_;
+		pTexture_ = nullptr;
+	}
+	pTexture_ = new Texture();
+
+	pTexture_->Load(filename);
 }
 
 void Sprite::Release()
@@ -131,4 +154,10 @@ void Sprite::Release()
 	SAFE_RELEASE(pConstantBuffer_);
 	SAFE_RELEASE(pIndexBuffer_);
 	SAFE_RELEASE(pVertexBuffer_);
+
+	if (pTexture_)
+	{
+		delete pTexture_;
+		pTexture_ = nullptr;
+	}
 }

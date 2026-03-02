@@ -87,7 +87,8 @@ void Player::onCollision(GameObject* pTarget)
 	if (pTarget->GetObjectName() == "Enemy")
 	{
 		KillMe();
+		MessageBoxA(0, "リザルトシーンに遷移します", "シーン遷移", MB_OK);
 		SceneManeger* pSceneManeger = (SceneManeger*)FindObjectByName("SceneManeger");
-		pSceneManeger->ChangeScene(SCENE_ID_GAMEOVER);
+		pSceneManeger->ChangeScene(SCENE_ID_RESULT);
 	}
 }

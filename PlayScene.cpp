@@ -29,7 +29,7 @@ void PlayScene::Update()
 	if (Input::IsKeyDown(DIK_O))
 	{
 		SceneManeger* pSceneManeger = (SceneManeger*)FindObjectByName("SceneManeger");
-		pSceneManeger->ChangeScene(SCENE_ID_GAMEOVER);
+		pSceneManeger->ChangeScene(SCENE_ID_RESULT);
 	}
 }
 

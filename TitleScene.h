@@ -1,18 +1,19 @@
 #pragma once
 #include "Engine/GameObject.h"
+#include "Engine/Sprite.h"
 
-class Sprite;
-
-class GameOverScene :
-	public GameObject
+class TitleScene :
+    public GameObject
 {
 public:
-    GameOverScene(GameObject* parent);
-    ~GameOverScene();
+    TitleScene(GameObject* parent);
+    ~TitleScene();
     void Initialize() override;
     void Update() override;
     void Draw() override;
     void Release() override;
 private:
-    Sprite* pSprite;
+    int hModel_;
+    Sprite* pSprite_;
 };
+

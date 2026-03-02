@@ -21,9 +21,9 @@ class Texture;
 class Sprite
 {
 public:
-	Sprite();
+	explicit Sprite(const char* filename);
+	//explicit Sprite(const std::wstring& filename);
 	virtual ~Sprite();
-	virtual HRESULT Initialize();
 	virtual void Draw(XMMATRIX& worldMatrix);
 	void Release();
 protected:
@@ -31,4 +31,9 @@ protected:
 	ID3D11Buffer* pIndexBuffer_;	//インデックスバッファ
 	ID3D11Buffer* pConstantBuffer_;	//コンスタントバッファ
 	Texture* pTexture_;//テクスチャ
+
+	HRESULT InitializeBuffers();
+
+	void LoadTexture(const char* filename);
+	//void LoadTexture(std::wstring& filename);
 };
